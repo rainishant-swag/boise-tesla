@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tesla Supercharger Plan | Bellevue → Boise</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:      #0A0D12;
+  --bg2:     #0F1318;
+  --bg3:     #141820;
+  --panel:   #1A1F28;
+  --border:  rgba(255,255,255,0.07);
+  --text:    #E8EAF0;
+  --muted:   rgba(232,234,240,0.45);
+  --electric:#00D4FF;
+  --electric2:#0096CC;
+  --warn:    #FF6B35;
+  --ok:      #00C875;
+  --gold:    #FFB800;
+  --d1:      #2D7DD2;
+  --d2:      #3DAA6A;
+  --d3:      #E8793A;
+  --d4:      #9B5DE5;
+  --radius:  12px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Syne', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ── NOISE TEXTURE OVERLAY ── */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 0; opacity: 0.4;
+}
+
+/* ── HERO ── */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center;
+  padding: 60px 24px;
+  overflow: hidden;
+}
+
+.hero-glow {
+  position: absolute;
+  width: 600px; height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0,212,255,0.12) 0%, transparent 70%);
+  top: 50%; left: 50%;
+  transform: translate(-50%, -60%);
+  pointer-events: none;
+  animation: pulse 4s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%,100% { opacity: 0.6; transform: translate(-50%,-60%) scale(1); }
+  50%      { opacity: 1;   transform: translate(-50%,-60%) scale(1.1); }
+}
+
+.hero-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(0,212,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,212,255,0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 100%);
+}
+
+.hero-eyebrow {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--electric);
+  margin-bottom: 20px;
+  position: relative;
+  display: inline-flex; align-items: center; gap: 12px;
+}
+.hero-eyebrow::before, .hero-eyebrow::after {
+  content: '';
+  display: block; width: 40px; height: 1px;
+  background: var(--electric); opacity: 0.5;
+}
+
+.hero h1 {
+  font-size: clamp(2.8rem, 7vw, 6rem);
+  font-weight: 800;
+  line-height: 1.0;
+  letter-spacing: -1px;
+  margin-bottom: 8px;
+  position: relative;
+}
+.hero h1 .route {
+  display: block;
+  background: linear-gradient(135deg, var(--electric), #FFFFFF 40%, var(--electric2));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero h1 .via {
+  display: block;
+  font-size: 0.35em;
+  font-weight: 400;
+  color: var(--muted);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  -webkit-text-fill-color: var(--muted);
+  margin-top: 12px;
+}
+
+.hero-sub {
+  font-size: 1rem;
+  color: var(--muted);
+  max-width: 500px;
+  margin: 24px auto 48px;
+}
+
+.hero-stats {
+  display: flex; gap: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--panel);
+  position: relative;
+}
+.hero-stat {
+  padding: 20px 32px;
+  border-right: 1px solid var(--border);
+  text-align: center;
+}
+.hero-stat:last-child { border-right: none; }
+.hero-stat-num {
+  display: block;
+  font-family: 'Space Mono', monospace;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--electric);
+  line-height: 1;
+}
+.hero-stat-label {
+  font-size: 0.65rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 4px;
+  display: block;
+}
+
+/* ── NAV ── */
+.nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(10,13,18,0.9);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  display: flex; gap: 0;
+  overflow-x: auto;
+}
+.nav a {
+  display: block; padding: 16px 20px;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase;
+  text-decoration: none;
+  color: var(--muted);
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+.nav a:hover, .nav a.active { color: var(--electric); border-color: var(--electric); }
+
+/* ── SECTION WRAPPER ── */
+.container { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
+.section { padding: 80px 0 40px; }
+
+.section-header { margin-bottom: 40px; }
+.section-tag {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--electric);
+  display: block; margin-bottom: 10px;
+}
+.section-header h2 {
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  font-weight: 800;
+  line-height: 1.1;
+}
+.section-header p { color: var(--muted); margin-top: 10px; font-size: 0.95rem; }
+
+/* ── DAY SECTIONS ── */
+.day-section { padding: 72px 0 24px; }
+
+.day-label {
+  display: inline-flex; align-items: center; gap: 14px;
+  margin-bottom: 36px;
+}
+.day-num {
+  width: 48px; height: 48px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Space Mono', monospace;
+  font-size: 1.1rem; font-weight: 700;
+  flex-shrink: 0;
+}
+.d1 .day-num { background: rgba(45,125,210,0.2); color: var(--d1); border: 1px solid var(--d1); }
+.d2 .day-num { background: rgba(61,170,106,0.2); color: var(--d2); border: 1px solid var(--d2); }
+.d3 .day-num { background: rgba(232,121,58,0.2); color: var(--d3); border: 1px solid var(--d3); }
+.d4 .day-num { background: rgba(155,93,229,0.2); color: var(--d4); border: 1px solid var(--d4); }
+
+.day-label-text h3 { font-size: 1.3rem; font-weight: 700; }
+.day-label-text p  { font-size: 0.82rem; color: var(--muted); font-family: 'Space Mono', monospace; margin-top: 2px; }
+
+/* ── STOP CARDS ── */
+.stop-list { display: flex; flex-direction: column; gap: 0; }
+
+.stop-row {
+  display: grid;
+  grid-template-columns: 36px 1fr auto;
+  gap: 0 20px;
+  align-items: stretch;
+  position: relative;
+}
+
+/* Vertical line connector */
+.stop-row:not(:last-child) .stop-line::after {
+  content: '';
+  position: absolute;
+  left: 17px; top: 36px; bottom: -16px;
+  width: 2px;
+  background: var(--border);
+}
+
+.stop-dot {
+  width: 36px; flex-shrink: 0;
+  display: flex; flex-direction: column; align-items: center;
+  padding-top: 20px;
+  position: relative;
+}
+.stop-dot-inner {
+  width: 14px; height: 14px; border-radius: 50%;
+  border: 2px solid var(--border);
+  background: var(--bg);
+  z-index: 1;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.stop-row.is-charger .stop-dot-inner {
+  width: 20px; height: 20px;
+  border-color: var(--electric);
+  background: rgba(0,212,255,0.15);
+  box-shadow: 0 0 12px rgba(0,212,255,0.4);
+}
+.stop-dot-line {
+  width: 2px; flex: 1; min-height: 16px;
+  background: var(--border);
+  margin-top: 4px;
+}
+.stop-row:last-child .stop-dot-line { display: none; }
+
+.stop-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 22px;
+  margin-bottom: 16px;
+  transition: border-color 0.2s, transform 0.2s;
+  cursor: default;
+}
+.stop-card:hover { border-color: rgba(255,255,255,0.15); transform: translateX(2px); }
+.stop-row.is-charger .stop-card {
+  border-color: rgba(0,212,255,0.25);
+  background: linear-gradient(135deg, rgba(0,212,255,0.05), var(--panel));
+}
+.stop-row.is-charger .stop-card:hover { border-color: rgba(0,212,255,0.5); }
+
+.stop-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 6px; }
+.stop-name { font-size: 0.98rem; font-weight: 700; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.sc-badge {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.58rem; letter-spacing: 1.5px; text-transform: uppercase;
+  background: rgba(0,212,255,0.15);
+  color: var(--electric);
+  border: 1px solid rgba(0,212,255,0.3);
+  padding: 2px 8px; border-radius: 4px;
+}
+.warn-badge {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.58rem; letter-spacing: 1px;
+  background: rgba(255,107,53,0.15);
+  color: var(--warn);
+  border: 1px solid rgba(255,107,53,0.3);
+  padding: 2px 8px; border-radius: 4px;
+}
+.stop-type { font-size: 0.72rem; color: var(--muted); font-family: 'Space Mono', monospace; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
+.stop-notes { font-size: 0.85rem; color: rgba(232,234,240,0.7); line-height: 1.6; }
+
+.stop-right { text-align: right; flex-shrink: 0; }
+.stop-charge {
+  display: flex; gap: 8px; align-items: center;
+  font-family: 'Space Mono', monospace; font-size: 0.85rem;
+}
+.charge-before { color: var(--warn); font-weight: 700; }
+.charge-before.ok { color: var(--ok); }
+.charge-arrow { color: var(--muted); }
+.charge-after { color: var(--electric); font-weight: 700; }
+.charge-time {
+  margin-top: 4px;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--muted);
+  text-align: right;
+}
+.charge-time.active { color: var(--electric); }
+
+.stop-links { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+.stop-links a {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem; letter-spacing: 1px; text-transform: uppercase;
+  padding: 5px 12px; border-radius: 6px;
+  text-decoration: none;
+  transition: all 0.15s;
+}
+.link-map { background: rgba(45,125,210,0.15); color: var(--d1); border: 1px solid rgba(45,125,210,0.3); }
+.link-map:hover { background: var(--d1); color: white; }
+.link-sc { background: rgba(0,212,255,0.1); color: var(--electric); border: 1px solid rgba(0,212,255,0.25); }
+.link-sc:hover { background: var(--electric); color: var(--bg); }
+
+/* ── MILES CONNECTOR ── */
+.miles-conn {
+  padding: 0 0 0 56px;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.68rem;
+  color: var(--muted);
+  margin: -8px 0 8px;
+  display: flex; align-items: center; gap: 8px;
+}
+.miles-conn::before {
+  content: '↓';
+  color: var(--border);
+}
+.miles-conn span { color: var(--electric); }
+
+/* ── SC DIRECTORY ── */
+.sc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+.sc-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.sc-card::before {
+  content: '⚡';
+  position: absolute; top: 16px; right: 16px;
+  font-size: 1.4rem; opacity: 0.08;
+}
+.sc-card:hover { border-color: rgba(0,212,255,0.35); transform: translateY(-2px); }
+.sc-card.critical { border-color: rgba(255,107,53,0.3); }
+.sc-card.critical:hover { border-color: var(--warn); }
+.sc-num {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem; color: var(--electric);
+  letter-spacing: 2px; text-transform: uppercase;
+  margin-bottom: 8px; display: block;
+}
+.sc-name { font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
+.sc-addr { font-size: 0.8rem; color: var(--muted); margin-bottom: 14px; line-height: 1.5; }
+.sc-specs {
+  display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px;
+}
+.spec-pill {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.62rem; padding: 3px 9px; border-radius: 4px;
+  letter-spacing: 0.5px;
+}
+.spec-power { background: rgba(0,212,255,0.1); color: var(--electric); border: 1px solid rgba(0,212,255,0.2); }
+.spec-stalls { background: rgba(0,200,117,0.1); color: var(--ok); border: 1px solid rgba(0,200,117,0.2); }
+.spec-note { background: rgba(255,184,0,0.1); color: var(--gold); border: 1px solid rgba(255,184,0,0.2); }
+.spec-warn { background: rgba(255,107,53,0.12); color: var(--warn); border: 1px solid rgba(255,107,53,0.25); }
+.sc-links { display: flex; gap: 8px; }
+.sc-links a {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem; letter-spacing: 1px; text-transform: uppercase;
+  padding: 5px 10px; border-radius: 6px;
+  text-decoration: none; transition: all 0.15s;
+}
+
+/* ── WARNING BOX ── */
+.warn-box {
+  background: rgba(255,107,53,0.08);
+  border: 1px solid rgba(255,107,53,0.3);
+  border-left: 4px solid var(--warn);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  margin: 32px 0;
+}
+.warn-box-title {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--warn); margin-bottom: 8px;
+  display: flex; align-items: center; gap: 8px;
+}
+.warn-box p { font-size: 0.9rem; color: rgba(232,234,240,0.8); line-height: 1.7; }
+.warn-box strong { color: var(--warn); }
+
+/* ── SUMMARY TABLE ── */
+.summary-table { width: 100%; border-collapse: collapse; margin-top: 24px; }
+.summary-table th {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.62rem; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--muted); text-align: left;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.summary-table td {
+  padding: 14px 16px; font-size: 0.88rem;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  vertical-align: middle;
+}
+.summary-table tr:last-child td { border-bottom: none; }
+.summary-table tr:hover td { background: rgba(255,255,255,0.02); }
+.td-day {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem; font-weight: 700;
+  letter-spacing: 1px;
+}
+.td-sc { font-weight: 600; color: var(--electric); }
+.td-before { font-family: 'Space Mono', monospace; font-weight: 700; }
+.td-before.warn { color: var(--warn); }
+.td-before.ok   { color: var(--ok); }
+.td-after  { font-family: 'Space Mono', monospace; color: var(--electric); font-weight: 700; }
+.td-time   { font-family: 'Space Mono', monospace; font-size: 0.8rem; color: var(--gold); }
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 40px 24px;
+  text-align: center;
+  color: var(--muted);
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 1.5px;
+}
+footer strong { color: var(--electric); }
+
+@media (max-width: 640px) {
+  .hero-stats { flex-direction: column; gap: 0; }
+  .hero-stat { border-right: none; border-bottom: 1px solid var(--border); }
+  .nav { padding: 0 12px; }
+  .stop-right { display: none; }
+  .section { padding: 56px 0 24px; }
+  .container { padding: 0 16px; }
+  .sc-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-eyebrow">Tesla Supercharger Plan</div>
+  <h1>
+    <span class="route">Bellevue &rarr; Boise</span>
+    <span class="via">Family Road Trip &nbsp;·&nbsp; Idaho Route &nbsp;·&nbsp; 4 Days</span>
+  </h1>
+  <p class="hero-sub">Complete charging plan for your Tesla along the I-90 &rarr; US-195 &rarr; US-95 corridor. Starting charge: 280 miles.</p>
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <span class="stat-num">9</span>
+      <span class="stat-label">SC Stops</span>
+    </div>
+    <div class="hero-stat">
+      <span class="stat-num">280 mi</span>
+      <span class="stat-label">Start Charge</span>
+    </div>
+    <div class="hero-stat">
+      <span class="stat-num">~2.5 hrs</span>
+      <span class="stat-label">Total Charge Time</span>
+    </div>
+    <div class="hero-stat">
+      <span class="stat-num">8</span>
+      <span class="stat-label">SC Stations</span>
+    </div>
+  </div>
+</section>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="#day1" class="d1t">Day 1</a>
+  <a href="#day2" class="d2t">Day 2</a>
+  <a href="#day3" class="d3t">Day 3</a>
+  <a href="#day4" class="d4t">Day 4</a>
+  <a href="#directory">⚡ SC Directory</a>
+  <a href="#summary">📊 Summary</a>
+  <a href="#warning">⚠ Gap Warning</a>
+</nav>
+
+<main>
+
+<!-- ══ DAY 1 ══ -->
+<section id="day1" class="day-section">
+<div class="container">
+  <div class="day-label d1">
+    <div class="day-num">01</div>
+    <div class="day-label-text">
+      <h3>Bellevue → Meridian</h3>
+      <p>466 mi total &nbsp;·&nbsp; 3 supercharger stops &nbsp;·&nbsp; I-90 → US-195 → US-95</p>
+    </div>
+  </div>
+
+  <div class="stop-list">
+
+    <div class="stop-row">
+      <div class="stop-dot"><div class="stop-dot-inner"></div><div class="stop-dot-line"></div></div>
+      <div class="stop-card">
+        <div class="stop-top">
+          <div>
+            <div class="stop-name">🏠 Depart Bellevue</div>
+            <div class="stop-type">Home Start</div>
+            <div class="stop-notes">Start fully charged at home. Head east on I-90. Home-cooked breakfast before departing!</div>
+          </div>
+          <div class="stop-right">
+            <div class="stop-charge"><span class="charge-after">280 mi</span></div>
+            <div class="charge-time">7:00 AM</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="miles-conn"><span>180 mi · ~2.5 hrs</span> east on I-90</div>
+
+    <div class="stop-row is-charger">
+      <div class="stop-dot"><div class="stop-dot-inner"></div><div class="stop-dot-line"></div></div>
+      <div class="stop-card">
+        <div class="stop-top">
+          <div>
+            <div class="stop-name">⚡ Supercharger — Moses Lake <span class="sc-badge">V3 · 250kW</span> <span class="warn-badge">⚠ MUST CHARGE</span></div>
+            <div class="stop-type">Tesla Supercharger · 12 stalls · 24/7</div>
+            <div class="stop-notes">2709 W Broadway Ave, Moses Lake, WA 98837. Only ~100 mi left after 180 mi drive — MUST charge here. Subway &amp; Starbucks on site. Mom &amp; Pop's Diner is 2 mi away — great time to grab breakfast while charging!</div>
+          </div>
+          <div class="stop-right">
+            <div class="stop-charge">
+              <span class="charge-before">100 mi</span>
+              <span class="charge-arrow">→</span>
+              <span class="charge-after">270 mi</span>
+            </div>
+            <div class="charge-time active">~30 min</div>
+          </div>
+        </div>
+        <div class="stop-links">
+          <a href="https://www.google.com/maps/dir/?api=1&destination=2709+W+Broadway+Ave,+Moses+Lake,+WA+98837" target="_blank" class="link-map">📍 Directions</a>
+          <a href="https://www.tesla.com/findus/location/supercharger/moseslakesupercharger" target="_blank" class="link-sc">⚡ Tesla.com</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="miles-conn"><span>93 mi · ~1.5 hrs</span> east to Spokane area</div>
+
+    <div class="stop-row is-charger">
+      <div class="stop-dot"><div class="stop-dot-inner"></div><div class="stop-dot-line"></div></div>
+      <div class="stop-card">
+        <div class="stop-top">
+          <div>
+            <div class="stop-name">⚡ Supercharger — Liberty Lake (Spokane) <span class="sc-badge">V4 · 250kW</span></div>
+            <div class="stop-type">Tesla Supercharger · 16 stalls · 24/7</div>
+            <div class="stop-notes">21728 E Mission Ave, Liberty Lake, WA 99019. Newest V4 station near Spokane. Charge to full 280 mi here — this is the LAST supercharger before the US-95 Idaho canyon stretch. Tesla service center on site.</div>
+          </div>
+          <div class="stop-right">
+            <div class="stop-charge">
+              <span class="charge-before ok">175 mi</span>
+              <span class="charge-arrow">→</span>
+              <span class="charge-after">280 mi</span>
+            </div>
+            <div class="charge-time active">~20 min</div>
+          </div>
+        </div>
+        <div class="stop-links">
+          <a href="https://www.google.com/maps/dir/?api=1&destination=21728+E+Mission+Ave,+Liberty+Lake,+WA+99019" target="_blank" class="link-map">📍 Directions</a>
+          <a href="https://www.tesla.com/findus/location/supercharger/SpokaneWASupercharger" target="_blank" class="link-sc">⚡ Tesla.com</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="miles-conn"><span>110 mi · ~1.5 hrs</span> south on US-195 → Lewiston</div>
+
+    <div class="stop-row is-charger">
+      <div class="stop-dot"><div class="stop-dot-inner"></div><div class="stop-dot-line"></div></div>
+      <div class="stop-card">
+        <div class="stop-top">
+          <div>
+            <div class="stop-name">⚡ Supercharger — Lewiston, ID <span class="sc-badge">V3 · 12 stalls</span> <span class="warn-badge">LAST SC BEFORE AIRBNB</span></div>
+            <div class="stop-type">Tesla Supercharger · WinCo Parking Lot · 24/7</div>
+            <div class="stop-notes">2001 17th St, Lewiston, ID 83501. Critical stop — US-95 south has NO superchargers for 81 miles to Meridian! Top up to full here. Also a great lunch stop at The Mango Tree (Indian restaurant, ★4.7) just nearby on Main St.</div>
+          </div>
+          <div class="stop-right">
+            <div class="stop-charge">
+              <span class="charge-before ok">170 mi</span>
+              <span class="charge-arrow">→</span>
+              <span class="charge-after">280 mi</span>
+            </div>
+            <div class="charge-time active">~20 min</div>
+          </div>
+        </div>
+        <div class="stop-links">
+          <a href="https://www.google.com/maps/dir/?api=1&destination=2001+17th+St,+Lewiston,+ID+83501" target="_blank" class="link-map">📍 Directions</a>
+          <a href="https://www.tesla.com/findus/location/supercharger/19118" target="_blank" class="link-sc">⚡ Tesla.com</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="miles-conn"><span>81 mi · ~1 hr</span> south on US-95 → Meridian</div>
+
+    <div class="stop-row">
+      <div class="stop-dot"><div class="stop-dot-inner"></div></div>
+      <div class="stop-card">
+        <div class="stop-top">
+          <div>
+            <div class="stop-name">🏠 Arrive — Airbnb, Meridian</div>
+            <div class="stop-type">6976 W Redwood Crk Dr, Meridian, ID 83646</div>
+            <div class="stop-notes">Arrive with ~199 mi range. ✅ Comfortable cushion. Costco is just 3 miles away to stock up!</div>
+          </div>
+          <div class="stop-right">
+            <div class="stop-charge"><span class="charge-before ok">199 mi</span></div>
+            <div class="charge-time">~3:30 PM</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</section>
+
+<!-- ══ DAY 2 ══ -->
+<section id="day2" class="day-section" style="border-top:1px solid var(--border);">
+<div class="container">
+  <div class="day-label d2">
+    <div class="day-num">02</div>
+    <div class="day-label-text">
+      <h3>Twin Falls Day Trip</h3>
+      <p>~238 mi round trip &nbsp;·&nbsp; 2 supercharger stops &nbsp;·&nbsp; Pre-charge + Twin Falls SC</p>
+    </div>
+  </div>
+
+  <div class="stop-list">
+
+    <div class="stop-row is-charger">
+      <div class="stop-dot"><div class="stop-dot-inner"></div><div class="stop-dot-line"></div></div>
+      <div class="stop-card">
+        <div class="stop-top">
+          <div>
+            <div class="stop-name">⚡ Supercharger — Boise, N Orchard St <span class="sc-badge">V3 · 250kW</span></div>
+            <div class="stop-type">Pre-Day 2 Charge · Only 10 mi from Airbnb</div>
+            <div class="stop-notes">851 N Orchard St, Boise, ID 83706. Next to Sonic Drive-In. Charge to full BEFORE starting the Twin Falls day trip. This is your PRIMARY charging hub for Days 2, 3 &amp; 4!</div>
+          </div>
+          <div class="stop-right">
+            <div class="stop-charge">
+              <span class="charge-before ok">189 mi</span>
+              <span class="charge-arrow">→</span>
+              <span class="charge-after">280 mi</span>
+            </div>
+            <div class="charge-time active">~25 min</div>
+          </div>
+        </div>
+        <div class="stop-links">
+          <a href="https://www.google.com/maps/dir/?api=1&destination=851+N+Orchard+St,+Boise,+ID+83706" target="_blank" class="link-map">📍 Directions</a>
+          <a href="https://www.tesla.com/findus/location/supercharger/18995" target="_blank" class="link-sc">⚡ Tesla.com</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="miles-conn"><span>95 mi · ~1.5 hrs</span> south on I-84</div>
+
+    <div class="stop-row">
+      <div class="stop-dot"><div class="stop-dot-inner"></div><div class="stop-dot-line"></div></div>
+      <div class="stop-card">
+        <div class="stop-top">
+          <div>
+            <div class="stop-name">Malad Gorge, Perrine Coulee, Shoshone Falls</div>
+            <div class="stop-type">Sightseeing · Twin Falls Area</div>
+            <div class="stop-notes">~143 mi from Airbnb to Twin Falls area. No charging needed here yet. Arrive with ~137 mi — comfortable for the next SC stop.</div>
+          </div>
+          <div class="stop-right">
+            <div class="stop-charge"><span class="charge-before ok">137 mi</span></div>
+            <div class="charge-time">~1:15 PM</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="miles-conn"><span>2 mi</span> to Twin Falls SC</div>
+
+    <div class="stop-row is-charger">
+      <div class="stop-dot"><div class="stop-dot-inner"></div><div class="stop-dot-line"></div></div>
+      <div class="stop-card">
+        <div class="stop-top">
+          <div>
+            <div class="stop-name">⚡ Supercharger — Twin Falls, ID <span class="sc-badge">8 stalls · 150kW</span></div>
+            <div class="stop-type">Tesla Supercharger · Twin Falls, ID 83301 · 24/7</div>
+            <div class="stop-notes">Twin Falls, ID 83301. Charge here during your Saffron Indian lunch (★4.7) or Twin Falls Zoo visit. Brings you back to full for the 95 mi return to Meridian.</div>
+          </div>
+          <div class="stop-right">
+            <div class="stop-charge">
+              <span class="charge-before ok">135 mi</span>
+              <span class="charge-arrow">→</span>
+              <span class="charge-after">280 mi</span>
+            </div>
+            <div class="charge-time active">~35 min</div>
+          </div>
+        </div>
+        <div class="stop-links">
+          <a href="https://www.google.com/maps/dir/?api=1&destination=Twin+Falls,+ID+83301" target="_blank" class="link-map">📍 Directions</a>
+          <a href="https://www.tesla.com/findus/location/supercharger/twinfallssupercharger" target="_blank" class="link-sc">⚡ Tesla.com</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="miles-conn"><span>95 mi · ~1.5 hrs</span> north on I-84 back to Meridian</div>
+
+    <div class="stop-row">
+      <div class="stop-dot"><div class="stop-dot-inner"></div></div>
+      <div class="stop-card">
+        <div class="stop-top">
+          <div>
+            <div class="stop-name">Return to Airbnb — Meridian</div>
+            <div class="stop-type">6976 W Redwood Crk Dr, Meridian, ID</div>
+            <div class="stop-notes">Arrive with ~185 mi range. ✅</div>
+          </div>
+          <div class="stop-right">
+            <div class="stop-charge"><span class="charge-before ok">185 mi</span></div>
+            <div class="charge-time">~5:30 PM</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</section>
+
+<!-- ══ DAY 3 ══ -->
+<section id="day3" class="day-section" style="border-top:1px solid var(--border);">
+<div class="container">
+  <div class="day-label d3">
+    <div class="day-num">03</div>
+    <div class="day-label-text">
+      <h3>Boise Local Day — Zoo, Discovery, Trampoline</h3>
+      <p>~63 mi total &nbsp;·&nbsp; 1 supercharger stop (pre-charge only) &nbsp;·&nbsp; Easy day!</p>
+    </div>
+  </div>
+
+  <div class="stop-list">
+    <div class="stop-row is-charger">
+      <div class="stop-dot"><div class="stop-dot-inner"></div><div class="stop-dot-line"></div></div>
+      <div class="stop-card">
+        <div class="stop-top">
+          <div>
+            <div class="stop-name">⚡ Supercharger — Boise, N Orchard St <span class="sc-badge">V3 · 250kW</span></div>
+            <div class="stop-type">Pre-Day 3 Charge · Only 10 mi from Airbnb</div>
+            <div class="stop-notes">851 N Orchard St, Boise, ID 83706. Quick top-up before your local Boise day. Day 3 total is only ~63 miles — well within range. No other charging needed today!</div>
+          </div>
+          <div class="stop-right">
+            <div class="stop-charge">
+              <span class="charge-before ok">175 mi</span>
+              <span class="charge-arrow">→</span>
+              <span class="charge-after">280 mi</span>
+            </div>
+            <div class="charge-time active">~20 min</div>
+          </div>
+        </div>
+        <div class="stop-links">
+          <a href="https://www.google.com/maps/dir/?api=1&destination=851+N+Orchard+St,+Boise,+ID+83706" target="_blank" class="link-map">📍 Directions</a>
+          <a href="https://www.tesla.com/findus/location/supercharger/18995" target="_blank" class="link-sc">⚡ Tesla.com</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="miles-conn"><span>63 mi total</span> local Boise driving</div>
+
+    <div class="stop-row">
+      <div class="stop-dot"><div class="stop-dot-inner"></div></div>
+      <div class="stop-card">
+        <div class="stop-top">
+          <div>
+            <div class="stop-name">Zoo Boise → Discovery Center → Bombay Grill → Fly High → Red Fort</div>
+            <div class="stop-type">Full Day Local · Boise / Meridian / Nampa</div>
+            <div class="stop-notes">No charging needed today. ✅ 63 mi total. Arrive home at ~8 PM with ~217 mi range. Pack bags tonight for Day 4 departure!</div>
+          </div>
+          <div class="stop-right">
+            <div class="stop-charge"><span class="charge-before ok">217 mi</span></div>
+            <div class="charge-time">~8:00 PM</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ══ DAY 4 ══ -->
+<section id="day4" class="day-section" style="border-top:1px solid var(--border);">
+<div class="container">
+  <div class="day-label d4">
+    <div class="day-num">04</div>
+    <div class="day-label-text">
+      <h3>Return Home — Meridian → Bellevue</h3>
+      <p>483 mi total &nbsp;·&nbsp; 3 supercharger stops &nbsp;·&nbsp; US-95 North → I-90 West</p>
+    </div>
+  </div>
+
+  <div class="stop-list">
+
+    <div class="stop-row is-charger">
+      <div class="stop-dot"><div class="stop-dot-inner"></div><div class="stop-dot-line"></div></div>
+      <div class="stop-card">
+        <div class="stop-top">
+          <div>
+            <div class="stop-name">⚡ Supercharger — Boise, N Orchard St <span class="sc-badge">V3 · 250kW</span></div>
+            <div class="stop-type">Pre-Day 4 Charge · Critical — Long Drive Day!</div>
+            <div class="stop-notes">851 N Orchard St, Boise, ID 83706. MUST charge to full before the 483-mile return journey. This is the last charger for 154 miles until Lewiston.</div>
+          </div>
+          <div class="stop-right">
+            <div class="stop-charge">
+              <span class="charge-before ok">207 mi</span>
+              <span class="charge-arrow">→</span>
+              <span class="charge-after">280 mi</span>
+            </div>
+            <div class="charge-time active">~20 min</div>
+          </div>
+        </div>
+        <div class="stop-links">
+          <a href="https://www.google.com/maps/dir/?api=1&destination=851+N+Orchard+St,+Boise,+ID+83706" target="_blank" class="link-map">📍 Directions</a>
+          <a href="https://www.tesla.com/findus/location/supercharger/18995" target="_blank" class="link-sc">⚡ Tesla.com</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="miles-conn"><span>154 mi · ~2.5 hrs</span> north on US-95</div>
+
+    <div class="stop-row is-charger">
+      <div class="stop-dot"><div class="stop-dot-inner"></div><div class="stop-dot-line"></div></div>
+      <div class="stop-card">
+        <div class="stop-top">
+          <div>
+            <div class="stop-name">⚡ Supercharger — Lewiston, ID <span class="sc-badge">V3 · 12 stalls</span> <span class="warn-badge">⚠ MUST CHARGE</span></div>
+            <div class="stop-type">Tesla Supercharger · WinCo Parking Lot · 24/7</div>
+            <div class="stop-notes">2001 17th St, Lewiston, ID 83501. Only ~126 mi left after the 154-mile US-95 drive — MUST charge here. Also a great lunch stop at The Mango Tree (★4.7) nearby!</div>
+          </div>
+          <div class="stop-right">
+            <div class="stop-charge">
+              <span class="charge-before">126 mi</span>
+              <span class="charge-arrow">→</span>
+              <span class="charge-after">280 mi</span>
+            </div>
+            <div class="charge-time active">~35 min</div>
+          </div>
+        </div>
+        <div class="stop-links">
+          <a href="https://www.google.com/maps/dir/?api=1&destination=2001+17th+St,+Lewiston,+ID+83501" target="_blank" class="link-map">📍 Directions</a>
+          <a href="https://www.tesla.com/findus/location/supercharger/19118" target="_blank" class="link-sc">⚡ Tesla.com</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="miles-conn"><span>115 mi · ~1.5 hrs</span> north on US-195 to Spokane</div>
+
+    <div class="stop-row is-charger">
+      <div class="stop-dot"><div class="stop-dot-inner"></div><div class="stop-dot-line"></div></div>
+      <div class="stop-card">
+        <div class="stop-top">
+          <div>
+            <div class="stop-name">⚡ Supercharger — Liberty Lake (Spokane) <span class="sc-badge">V4 · 250kW</span></div>
+            <div class="stop-type">Tesla Supercharger · 16 stalls · 24/7</div>
+            <div class="stop-notes">21728 E Mission Ave, Liberty Lake, WA 99019. Top up here — you have 210 miles left to Bellevue with a stop in Cle Elum. Cle Elum is 130 miles, then 80 miles home. Charge gives comfortable range to both stops.</div>
+          </div>
+          <div class="stop-right">
+            <div class="stop-charge">
+              <span class="charge-before ok">160 mi</span>
+              <span class="charge-arrow">→</span>
+              <span class="charge-after">280 mi</span>
+            </div>
+            <div class="charge-time active">~25 min</div>
+          </div>
+        </div>
+        <div class="stop-links">
+          <a href="https://www.google.com/maps/dir/?api=1&destination=21728+E+Mission+Ave,+Liberty+Lake,+WA+99019" target="_blank" class="link-map">📍 Directions</a>
+          <a href="https://www.tesla.com/findus/location/supercharger/SpokaneWASupercharger" target="_blank" class="link-sc">⚡ Tesla.com</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="miles-conn"><span>130 mi · ~2 hrs</span> west on I-90</div>
+
+    <div class="stop-row">
+      <div class="stop-dot"><div class="stop-dot-inner"></div><div class="stop-dot-line"></div></div>
+      <div class="stop-card">
+        <div class="stop-top">
+          <div>
+            <div class="stop-name">Wild Flora Bakery + City Park — Cle Elum</div>
+            <div class="stop-type">Rest Stop &amp; Snacks · 110 S Oakes Ave, Cle Elum, WA</div>
+            <div class="stop-notes">Arrive with ~150 mi. Relax with pastries, let kids run in the park. No charging needed here — 80 miles to Bellevue is easy from 150 mi range.</div>
+          </div>
+          <div class="stop-right">
+            <div class="stop-charge"><span class="charge-before ok">150 mi</span></div>
+            <div class="charge-time">~4:30 PM</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="miles-conn"><span>80 mi · ~1.5 hrs</span> west on I-90</div>
+
+    <div class="stop-row">
+      <div class="stop-dot"><div class="stop-dot-inner"></div></div>
+      <div class="stop-card">
+        <div class="stop-top">
+          <div>
+            <div class="stop-name">🏠 Arrive Home — Bellevue, WA 🎉</div>
+            <div class="stop-type">Home!</div>
+            <div class="stop-notes">Arrive with ~70 mi range. ✅ Plug in at home overnight. Total Day 4 = ~483 miles. What a trip!</div>
+          </div>
+          <div class="stop-right">
+            <div class="stop-charge"><span class="charge-before ok">70 mi</span></div>
+            <div class="charge-time">~6:00 PM</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</section>
+
+<!-- ══ WARNING BOX ══ -->
+<section id="warning" style="border-top:1px solid var(--border); padding: 64px 0;">
+<div class="container">
+  <div class="warn-box">
+    <div class="warn-box-title">⚠ Critical Gap — US-95 Corridor</div>
+    <p>The <strong>US-95 corridor from Lewiston, ID to Meridian (Boise area)</strong> has <strong>zero Tesla Superchargers</strong> for 81 miles through White Bird Canyon. This is a remote, mountainous stretch with no urban charging infrastructure.</p>
+    <br>
+    <p><strong>Day 1:</strong> Always charge to FULL at Lewiston SC before heading south on US-95. Arrive Meridian with ~199 mi — comfortable.</p>
+    <p style="margin-top:8px"><strong>Day 4:</strong> Charge fully at Boise SC before departing north. You'll have 280 mi when you leave — the 154 miles to Lewiston will leave you at ~126 mi, so the Lewiston SC stop is mandatory on the return trip.</p>
+  </div>
+</div>
+</section>
+
+<!-- ══ SC DIRECTORY ══ -->
+<section id="directory" class="section" style="border-top:1px solid var(--border);">
+<div class="container">
+  <div class="section-header">
+    <span class="section-tag">⚡ Station Reference</span>
+    <h2>Supercharger Directory</h2>
+    <p>All 8 stations on your route — with addresses, specs and direct links</p>
+  </div>
+
+  <div class="sc-grid">
+
+    <div class="sc-card">
+      <span class="sc-num">SC-01 · Day 1 &amp; Day 4</span>
+      <div class="sc-name">Moses Lake, WA</div>
+      <div class="sc-addr">2709 W Broadway Ave<br>Moses Lake, WA 98837</div>
+      <div class="sc-specs">
+        <span class="spec-pill spec-power">250kW V3</span>
+        <span class="spec-pill spec-stalls">12 stalls</span>
+        <span class="spec-pill spec-note">24/7</span>
+        <span class="spec-pill spec-note">Open to all EVs</span>
+      </div>
+      <div class="sc-links">
+        <a href="https://www.google.com/maps/dir/?api=1&destination=2709+W+Broadway+Ave,+Moses+Lake,+WA+98837" target="_blank" class="link-map" style="font-size:0.6rem">📍 Directions</a>
+        <a href="https://www.tesla.com/findus/location/supercharger/moseslakesupercharger" target="_blank" class="link-sc" style="font-size:0.6rem">⚡ Tesla.com</a>
+      </div>
+    </div>
+
+    <div class="sc-card">
+      <span class="sc-num">SC-02 · Day 1 &amp; Day 4</span>
+      <div class="sc-name">Liberty Lake (Spokane), WA</div>
+      <div class="sc-addr">21728 E Mission Ave<br>Liberty Lake, WA 99019</div>
+      <div class="sc-specs">
+        <span class="spec-pill spec-power">250kW V4</span>
+        <span class="spec-pill spec-stalls">16 stalls</span>
+        <span class="spec-pill spec-note">24/7</span>
+        <span class="spec-pill spec-note">Tesla Service On Site</span>
+      </div>
+      <div class="sc-links">
+        <a href="https://www.google.com/maps/dir/?api=1&destination=21728+E+Mission+Ave,+Liberty+Lake,+WA+99019" target="_blank" class="link-map" style="font-size:0.6rem">📍 Directions</a>
+        <a href="https://www.tesla.com/findus/location/supercharger/SpokaneWASupercharger" target="_blank" class="link-sc" style="font-size:0.6rem">⚡ Tesla.com</a>
+      </div>
+    </div>
+
+    <div class="sc-card critical">
+      <span class="sc-num" style="color:var(--warn)">SC-03 · Day 1 &amp; Day 4 · CRITICAL</span>
+      <div class="sc-name">Lewiston, ID</div>
+      <div class="sc-addr">2001 17th St (WinCo Parking Lot)<br>Lewiston, ID 83501</div>
+      <div class="sc-specs">
+        <span class="spec-pill spec-power">V3 · Fast</span>
+        <span class="spec-pill spec-stalls">12 stalls</span>
+        <span class="spec-pill spec-note">24/7</span>
+        <span class="spec-pill spec-warn">Last SC before Meridian!</span>
+      </div>
+      <div class="sc-links">
+        <a href="https://www.google.com/maps/dir/?api=1&destination=2001+17th+St,+Lewiston,+ID+83501" target="_blank" class="link-map" style="font-size:0.6rem">📍 Directions</a>
+        <a href="https://www.tesla.com/findus/location/supercharger/19118" target="_blank" class="link-sc" style="font-size:0.6rem">⚡ Tesla.com</a>
+      </div>
+    </div>
+
+    <div class="sc-card">
+      <span class="sc-num" style="color:var(--ok)">SC-04 · Days 2, 3 &amp; 4 · PRIMARY HUB</span>
+      <div class="sc-name">Boise, ID — N Orchard St</div>
+      <div class="sc-addr">851 N Orchard St (Sonic Drive-In)<br>Boise, ID 83706</div>
+      <div class="sc-specs">
+        <span class="spec-pill spec-power">250kW V3</span>
+        <span class="spec-pill spec-stalls">8 stalls</span>
+        <span class="spec-pill spec-note">24/7</span>
+        <span class="spec-pill spec-note">~10 mi from Airbnb</span>
+      </div>
+      <div class="sc-links">
+        <a href="https://www.google.com/maps/dir/?api=1&destination=851+N+Orchard+St,+Boise,+ID+83706" target="_blank" class="link-map" style="font-size:0.6rem">📍 Directions</a>
+        <a href="https://www.tesla.com/findus/location/supercharger/18995" target="_blank" class="link-sc" style="font-size:0.6rem">⚡ Tesla.com</a>
+      </div>
+    </div>
+
+    <div class="sc-card">
+      <span class="sc-num">SC-05 · Day 2</span>
+      <div class="sc-name">Twin Falls, ID</div>
+      <div class="sc-addr">Twin Falls, ID 83301<br>(Downtown area)</div>
+      <div class="sc-specs">
+        <span class="spec-pill spec-power">150kW V2</span>
+        <span class="spec-pill spec-stalls">8 stalls</span>
+        <span class="spec-pill spec-note">24/7</span>
+      </div>
+      <div class="sc-links">
+        <a href="https://www.google.com/maps/dir/?api=1&destination=Twin+Falls,+ID+83301" target="_blank" class="link-map" style="font-size:0.6rem">📍 Directions</a>
+        <a href="https://www.tesla.com/findus/location/supercharger/twinfallssupercharger" target="_blank" class="link-sc" style="font-size:0.6rem">⚡ Tesla.com</a>
+      </div>
+    </div>
+
+    <div class="sc-card">
+      <span class="sc-num">SC-06 · Boise Backup</span>
+      <div class="sc-name">Boise, ID — Entertainment Ave</div>
+      <div class="sc-addr">1426 S Entertainment Ave (Oxford Suites)<br>Boise, ID 83709</div>
+      <div class="sc-specs">
+        <span class="spec-pill spec-power">150kW V2</span>
+        <span class="spec-pill spec-stalls">8 stalls</span>
+        <span class="spec-pill spec-note">24/7</span>
+        <span class="spec-pill spec-warn">Backup — use N Orchard first</span>
+      </div>
+      <div class="sc-links">
+        <a href="https://www.google.com/maps/dir/?api=1&destination=1426+S+Entertainment+Ave,+Boise,+ID+83709" target="_blank" class="link-map" style="font-size:0.6rem">📍 Directions</a>
+        <a href="https://www.tesla.com/findus/location/supercharger/boisesupercharger" target="_blank" class="link-sc" style="font-size:0.6rem">⚡ Tesla.com</a>
+      </div>
+    </div>
+
+    <div class="sc-card">
+      <span class="sc-num">SC-07 · Spokane Backup</span>
+      <div class="sc-name">Spokane, WA — TA Petro</div>
+      <div class="sc-addr">10506 W Aero Rd (TA Petro truck stop)<br>Spokane, WA 99224</div>
+      <div class="sc-specs">
+        <span class="spec-pill spec-power">250kW V3</span>
+        <span class="spec-pill spec-stalls">8 stalls</span>
+        <span class="spec-pill spec-note">24/7</span>
+        <span class="spec-pill spec-warn">Backup if Liberty Lake busy</span>
+      </div>
+      <div class="sc-links">
+        <a href="https://www.google.com/maps/dir/?api=1&destination=10506+W+Aero+Rd,+Spokane,+WA+99224" target="_blank" class="link-map" style="font-size:0.6rem">📍 Directions</a>
+        <a href="https://www.tesla.com/findus/location/supercharger/spokanewashingsupercharger" target="_blank" class="link-sc" style="font-size:0.6rem">⚡ Tesla.com</a>
+      </div>
+    </div>
+
+    <div class="sc-card">
+      <span class="sc-num">SC-08 · Day 4 Optional</span>
+      <div class="sc-name">Ellensburg, WA</div>
+      <div class="sc-addr">1500 Canyon Rd (SureStay Hotel)<br>Ellensburg, WA 98926</div>
+      <div class="sc-specs">
+        <span class="spec-pill spec-power">120kW V2</span>
+        <span class="spec-pill spec-stalls">5 stalls</span>
+        <span class="spec-pill spec-note">24/7</span>
+        <span class="spec-pill spec-warn">Optional — only if needed</span>
+      </div>
+      <div class="sc-links">
+        <a href="https://www.google.com/maps/dir/?api=1&destination=1500+Canyon+Rd,+Ellensburg,+WA+98926" target="_blank" class="link-map" style="font-size:0.6rem">📍 Directions</a>
+        <a href="https://www.tesla.com/findus/location/supercharger/ellensburgwasupercharger" target="_blank" class="link-sc" style="font-size:0.6rem">⚡ Tesla.com</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+</section>
+
+<!-- ══ SUMMARY TABLE ══ -->
+<section id="summary" class="section" style="border-top:1px solid var(--border);">
+<div class="container">
+  <div class="section-header">
+    <span class="section-tag">📊 At a Glance</span>
+    <h2>Full Charging Summary</h2>
+    <p>All 9 supercharger stops across 4 days — sorted by day</p>
+  </div>
+
+  <div style="overflow-x:auto; border:1px solid var(--border); border-radius:var(--radius); background:var(--panel);">
+    <table class="summary-table">
+      <thead>
+        <tr>
+          <th>Day</th>
+          <th>Supercharger</th>
+          <th>Miles from Prev</th>
+          <th>Before</th>
+          <th>After</th>
+          <th>Est. Time</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="td-day" style="color:var(--d1)">Day 1</td><td class="td-sc">⚡ Moses Lake, WA</td><td>180 mi</td><td class="td-before warn">100 mi ⚠</td><td class="td-after">270 mi</td><td class="td-time">~30 min</td></tr>
+        <tr><td class="td-day" style="color:var(--d1)">Day 1</td><td class="td-sc">⚡ Liberty Lake (Spokane), WA</td><td>93 mi</td><td class="td-before ok">175 mi</td><td class="td-after">280 mi</td><td class="td-time">~20 min</td></tr>
+        <tr><td class="td-day" style="color:var(--d1)">Day 1</td><td class="td-sc">⚡ Lewiston, ID</td><td>110 mi</td><td class="td-before ok">170 mi</td><td class="td-after">280 mi</td><td class="td-time">~20 min</td></tr>
+        <tr style="border-top:1px solid rgba(255,255,255,0.08)"><td class="td-day" style="color:var(--d2)">Day 2</td><td class="td-sc">⚡ Boise – N Orchard (pre-charge)</td><td>10 mi</td><td class="td-before ok">189 mi</td><td class="td-after">280 mi</td><td class="td-time">~25 min</td></tr>
+        <tr><td class="td-day" style="color:var(--d2)">Day 2</td><td class="td-sc">⚡ Twin Falls, ID</td><td>143 mi</td><td class="td-before ok">135 mi</td><td class="td-after">280 mi</td><td class="td-time">~35 min</td></tr>
+        <tr style="border-top:1px solid rgba(255,255,255,0.08)"><td class="td-day" style="color:var(--d3)">Day 3</td><td class="td-sc">⚡ Boise – N Orchard (pre-charge)</td><td>10 mi</td><td class="td-before ok">175 mi</td><td class="td-after">280 mi</td><td class="td-time">~20 min</td></tr>
+        <tr style="border-top:1px solid rgba(255,255,255,0.08)"><td class="td-day" style="color:var(--d4)">Day 4</td><td class="td-sc">⚡ Boise – N Orchard (pre-charge)</td><td>10 mi</td><td class="td-before ok">207 mi</td><td class="td-after">280 mi</td><td class="td-time">~20 min</td></tr>
+        <tr><td class="td-day" style="color:var(--d4)">Day 4</td><td class="td-sc">⚡ Lewiston, ID</td><td>154 mi</td><td class="td-before warn">126 mi ⚠</td><td class="td-after">280 mi</td><td class="td-time">~35 min</td></tr>
+        <tr><td class="td-day" style="color:var(--d4)">Day 4</td><td class="td-sc">⚡ Liberty Lake (Spokane), WA</td><td>115 mi</td><td class="td-before ok">160 mi</td><td class="td-after">280 mi</td><td class="td-time">~25 min</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-top:32px;">
+    <div style="background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:20px;text-align:center;">
+      <div style="font-family:'Space Mono',monospace;font-size:1.8rem;color:var(--electric);font-weight:700">9</div>
+      <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-top:4px">Total SC Stops</div>
+    </div>
+    <div style="background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:20px;text-align:center;">
+      <div style="font-family:'Space Mono',monospace;font-size:1.8rem;color:var(--gold);font-weight:700">~2.5 hrs</div>
+      <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-top:4px">Total Charge Time</div>
+    </div>
+    <div style="background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:20px;text-align:center;">
+      <div style="font-family:'Space Mono',monospace;font-size:1.8rem;color:var(--warn);font-weight:700">2</div>
+      <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-top:4px">⚠ Must-Charge Stops</div>
+    </div>
+    <div style="background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:20px;text-align:center;">
+      <div style="font-family:'Space Mono',monospace;font-size:1.8rem;color:var(--ok);font-weight:700">70 mi</div>
+      <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-top:4px">Arrive Home With</div>
+    </div>
+  </div>
+
+</div>
+</section>
+
+</main>
+
+<footer>
+  <strong>⚡ Tesla Supercharger Plan</strong> &nbsp;·&nbsp; Bellevue &rarr; Boise &nbsp;·&nbsp; 4-Day Family Road Trip<br>
+  <span style="margin-top:8px;display:block;opacity:0.5">Always verify supercharger availability on the Tesla app before departure. Charge estimates based on Model 3 LR / Model Y LR at 80% efficiency.</span>
+</footer>
+
+<script>
+const sections = ['day1','day2','day3','day4','directory','summary','warning'];
+const navLinks = document.querySelectorAll('.nav a');
+window.addEventListener('scroll', () => {
+  let cur = '';
+  sections.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && window.scrollY >= el.offsetTop - 90) cur = id;
+  });
+  navLinks.forEach(a => {
+    const href = a.getAttribute('href').replace('#','');
+    a.classList.toggle('active', href === cur);
+  });
+});
+</script>
+
+</body>
+</html>
