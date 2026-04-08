@@ -3,467 +3,283 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tesla Supercharger Plan | Bellevue → Boise</title>
+<title>Bellevue → Boise | Family Road Trip + Tesla Plan</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg:      #0A0D12;
-  --bg2:     #0F1318;
-  --bg3:     #141820;
-  --panel:   #1A1F28;
-  --border:  rgba(255,255,255,0.07);
-  --text:    #E8EAF0;
-  --muted:   rgba(232,234,240,0.45);
-  --electric:#00D4FF;
-  --electric2:#0096CC;
-  --warn:    #FF6B35;
-  --ok:      #00C875;
-  --gold:    #FFB800;
-  --d1:      #2D7DD2;
-  --d2:      #3DAA6A;
-  --d3:      #E8793A;
-  --d4:      #9B5DE5;
-  --radius:  12px;
+  --bg:#0A0D12; --bg2:#0F1318; --panel:#161B24; --panel2:#1C2230;
+  --border:rgba(255,255,255,0.07); --border2:rgba(255,255,255,0.12);
+  --text:#E8EAF0; --muted:rgba(232,234,240,0.45);
+  --electric:#00D4FF; --electric2:#0096CC;
+  --warn:#FF6B35; --ok:#00C875; --gold:#FFB800;
+  --indian:#F5A623; --indian-bg:rgba(245,166,35,0.1);
+  --sc-color:#00D4FF; --sc-bg:rgba(0,212,255,0.08);
+  --scenic:#4ADE80; --scenic-bg:rgba(74,222,128,0.08);
+  --home:#818CF8; --home-bg:rgba(129,140,248,0.08);
+  --kids:#F472B6; --kids-bg:rgba(244,114,182,0.08);
+  --d1:#3B82F6; --d1-bg:rgba(59,130,246,0.08);
+  --d2:#10B981; --d2-bg:rgba(16,185,129,0.08);
+  --d3:#F59E0B; --d3-bg:rgba(245,158,11,0.08);
+  --d4:#8B5CF6; --d4-bg:rgba(139,92,246,0.08);
+  --radius:10px;
 }
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden;}
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-
-body {
-  font-family: 'Syne', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  line-height: 1.6;
-  overflow-x: hidden;
-}
-
-/* ── NOISE TEXTURE OVERLAY ── */
-body::before {
-  content: '';
-  position: fixed; inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
-  pointer-events: none; z-index: 0; opacity: 0.4;
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0,212,255,0.04) 0%, transparent 70%);
 }
 
 /* ── HERO ── */
-.hero {
-  position: relative;
-  min-height: 100vh;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  text-align: center;
-  padding: 60px 24px;
-  overflow: hidden;
+.hero{
+  position:relative;min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;
+  padding:60px 24px;overflow:hidden;
 }
+.hero-grid{
+  position:absolute;inset:0;
+  background-image:linear-gradient(rgba(0,212,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.03) 1px,transparent 1px);
+  background-size:50px 50px;
+  mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 30%,transparent 100%);
+}
+.hero-glow{
+  position:absolute;width:700px;height:700px;border-radius:50%;
+  background:radial-gradient(circle,rgba(0,212,255,0.09) 0%,transparent 65%);
+  top:50%;left:50%;transform:translate(-50%,-55%);pointer-events:none;
+  animation:hpulse 5s ease-in-out infinite;
+}
+@keyframes hpulse{0%,100%{opacity:.6;transform:translate(-50%,-55%) scale(1);}50%{opacity:1;transform:translate(-50%,-55%) scale(1.08);}}
 
-.hero-glow {
-  position: absolute;
-  width: 600px; height: 600px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(0,212,255,0.12) 0%, transparent 70%);
-  top: 50%; left: 50%;
-  transform: translate(-50%, -60%);
-  pointer-events: none;
-  animation: pulse 4s ease-in-out infinite;
+.hero-eyebrow{
+  font-family:'Space Mono',monospace;font-size:.68rem;letter-spacing:4px;text-transform:uppercase;
+  color:var(--electric);margin-bottom:20px;position:relative;
+  display:inline-flex;align-items:center;gap:12px;
 }
-@keyframes pulse {
-  0%,100% { opacity: 0.6; transform: translate(-50%,-60%) scale(1); }
-  50%      { opacity: 1;   transform: translate(-50%,-60%) scale(1.1); }
-}
+.hero-eyebrow::before,.hero-eyebrow::after{content:'';display:block;width:36px;height:1px;background:var(--electric);opacity:.4;}
 
-.hero-grid {
-  position: absolute; inset: 0;
-  background-image:
-    linear-gradient(rgba(0,212,255,0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0,212,255,0.04) 1px, transparent 1px);
-  background-size: 60px 60px;
-  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 100%);
+.hero h1{
+  font-size:clamp(3rem,7vw,6.5rem);font-weight:800;line-height:.95;
+  letter-spacing:-2px;margin-bottom:12px;position:relative;
 }
+.hero h1 .r1{
+  display:block;
+  background:linear-gradient(135deg,var(--electric) 0%,#ffffff 45%,var(--electric2) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.hero h1 .r2{
+  display:block;font-size:.32em;font-weight:500;letter-spacing:3px;text-transform:uppercase;
+  -webkit-text-fill-color:var(--muted);color:var(--muted);margin-top:16px;
+}
+.hero-sub{font-size:.95rem;color:var(--muted);max-width:520px;margin:24px auto 48px;line-height:1.7;}
 
-.hero-eyebrow {
-  font-family: 'Space Mono', monospace;
-  font-size: 0.7rem;
-  letter-spacing: 4px;
-  text-transform: uppercase;
-  color: var(--electric);
-  margin-bottom: 20px;
-  position: relative;
-  display: inline-flex; align-items: center; gap: 12px;
+.hero-stats{
+  display:flex;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;
+  background:var(--panel);
 }
-.hero-eyebrow::before, .hero-eyebrow::after {
-  content: '';
-  display: block; width: 40px; height: 1px;
-  background: var(--electric); opacity: 0.5;
-}
-
-.hero h1 {
-  font-size: clamp(2.8rem, 7vw, 6rem);
-  font-weight: 800;
-  line-height: 1.0;
-  letter-spacing: -1px;
-  margin-bottom: 8px;
-  position: relative;
-}
-.hero h1 .route {
-  display: block;
-  background: linear-gradient(135deg, var(--electric), #FFFFFF 40%, var(--electric2));
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-.hero h1 .via {
-  display: block;
-  font-size: 0.35em;
-  font-weight: 400;
-  color: var(--muted);
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  -webkit-text-fill-color: var(--muted);
-  margin-top: 12px;
-}
-
-.hero-sub {
-  font-size: 1rem;
-  color: var(--muted);
-  max-width: 500px;
-  margin: 24px auto 48px;
-}
-
-.hero-stats {
-  display: flex; gap: 0;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  overflow: hidden;
-  background: var(--panel);
-  position: relative;
-}
-.hero-stat {
-  padding: 20px 32px;
-  border-right: 1px solid var(--border);
-  text-align: center;
-}
-.hero-stat:last-child { border-right: none; }
-.hero-stat-num {
-  display: block;
-  font-family: 'Space Mono', monospace;
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: var(--electric);
-  line-height: 1;
-}
-.hero-stat-label {
-  font-size: 0.65rem;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-top: 4px;
-  display: block;
-}
+.hstat{padding:18px 28px;border-right:1px solid var(--border);text-align:center;}
+.hstat:last-child{border-right:none;}
+.hstat-num{display:block;font-family:'Space Mono',monospace;font-size:1.6rem;font-weight:700;color:var(--electric);line-height:1;}
+.hstat-label{font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:4px;display:block;}
 
 /* ── NAV ── */
-.nav {
-  position: sticky; top: 0; z-index: 100;
-  background: rgba(10,13,18,0.9);
-  backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--border);
-  padding: 0 40px;
-  display: flex; gap: 0;
-  overflow-x: auto;
+.nav{
+  position:sticky;top:0;z-index:100;
+  background:rgba(10,13,18,.92);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  padding:0 32px;display:flex;overflow-x:auto;gap:0;
 }
-.nav a {
-  display: block; padding: 16px 20px;
-  font-family: 'Space Mono', monospace;
-  font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase;
-  text-decoration: none;
-  color: var(--muted);
-  border-bottom: 2px solid transparent;
-  white-space: nowrap;
-  transition: all 0.2s;
+.nav a{
+  display:block;padding:14px 16px;
+  font-family:'Space Mono',monospace;font-size:.62rem;letter-spacing:1.5px;text-transform:uppercase;
+  text-decoration:none;color:var(--muted);border-bottom:2px solid transparent;
+  white-space:nowrap;transition:all .2s;
 }
-.nav a:hover, .nav a.active { color: var(--electric); border-color: var(--electric); }
+.nav a:hover,.nav a.active{color:var(--electric);border-color:var(--electric);}
 
-/* ── SECTION WRAPPER ── */
-.container { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
-.section { padding: 80px 0 40px; }
+/* ── LAYOUT ── */
+.container{max-width:1000px;margin:0 auto;padding:0 24px;}
+.day-section{padding:72px 0 24px;border-top:1px solid var(--border);}
 
-.section-header { margin-bottom: 40px; }
-.section-tag {
-  font-family: 'Space Mono', monospace;
-  font-size: 0.65rem; letter-spacing: 3px; text-transform: uppercase;
-  color: var(--electric);
-  display: block; margin-bottom: 10px;
+.day-hdr{display:flex;align-items:flex-start;gap:16px;margin-bottom:40px;}
+.day-num-badge{
+  width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-family:'Space Mono',monospace;font-size:1rem;font-weight:700;flex-shrink:0;
 }
-.section-header h2 {
-  font-size: clamp(1.6rem, 3vw, 2.4rem);
-  font-weight: 800;
-  line-height: 1.1;
-}
-.section-header p { color: var(--muted); margin-top: 10px; font-size: 0.95rem; }
+.d1s .day-num-badge{background:rgba(59,130,246,.15);color:var(--d1);border:1px solid rgba(59,130,246,.3);}
+.d2s .day-num-badge{background:rgba(16,185,129,.15);color:var(--d2);border:1px solid rgba(16,185,129,.3);}
+.d3s .day-num-badge{background:rgba(245,158,11,.15);color:var(--d3);border:1px solid rgba(245,158,11,.3);}
+.d4s .day-num-badge{background:rgba(139,92,246,.15);color:var(--d4);border:1px solid rgba(139,92,246,.3);}
+.day-hdr-text h2{font-size:1.4rem;font-weight:800;line-height:1.2;}
+.day-hdr-text p{font-family:'Space Mono',monospace;font-size:.7rem;color:var(--muted);margin-top:4px;}
+.day-pills{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
+.dpill{font-size:.65rem;padding:3px 9px;border-radius:4px;font-family:'Space Mono',monospace;letter-spacing:.5px;}
+.dpill-indian{background:var(--indian-bg);color:var(--indian);border:1px solid rgba(245,166,35,.2);}
+.dpill-sc{background:var(--sc-bg);color:var(--electric);border:1px solid rgba(0,212,255,.2);}
+.dpill-scenic{background:var(--scenic-bg);color:var(--scenic);border:1px solid rgba(74,222,128,.2);}
+.dpill-kids{background:var(--kids-bg);color:var(--kids);border:1px solid rgba(244,114,182,.2);}
 
-/* ── DAY SECTIONS ── */
-.day-section { padding: 72px 0 24px; }
+/* ── TIMELINE ── */
+.timeline{display:flex;flex-direction:column;}
+.tl-row{display:grid;grid-template-columns:16px 1fr;gap:0 20px;position:relative;}
 
-.day-label {
-  display: inline-flex; align-items: center; gap: 14px;
-  margin-bottom: 36px;
+.tl-spine{
+  display:flex;flex-direction:column;align-items:center;
+  padding-top:22px;
 }
-.day-num {
-  width: 48px; height: 48px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-family: 'Space Mono', monospace;
-  font-size: 1.1rem; font-weight: 700;
-  flex-shrink: 0;
+.tl-dot{
+  width:12px;height:12px;border-radius:50%;border:2px solid var(--border2);
+  background:var(--bg);z-index:1;flex-shrink:0;transition:all .2s;
 }
-.d1 .day-num { background: rgba(45,125,210,0.2); color: var(--d1); border: 1px solid var(--d1); }
-.d2 .day-num { background: rgba(61,170,106,0.2); color: var(--d2); border: 1px solid var(--d2); }
-.d3 .day-num { background: rgba(232,121,58,0.2); color: var(--d3); border: 1px solid var(--d3); }
-.d4 .day-num { background: rgba(155,93,229,0.2); color: var(--d4); border: 1px solid var(--d4); }
+.tl-row.type-sc .tl-dot{
+  width:16px;height:16px;border-color:var(--electric);
+  background:rgba(0,212,255,.15);box-shadow:0 0 10px rgba(0,212,255,.35);
+}
+.tl-row.type-indian .tl-dot{width:14px;height:14px;border-color:var(--indian);background:var(--indian-bg);}
+.tl-line{width:1px;flex:1;background:var(--border);margin-top:4px;}
+.tl-row:last-child .tl-line{display:none;}
 
-.day-label-text h3 { font-size: 1.3rem; font-weight: 700; }
-.day-label-text p  { font-size: 0.82rem; color: var(--muted); font-family: 'Space Mono', monospace; margin-top: 2px; }
+.tl-card{
+  background:var(--panel);border:1px solid var(--border);
+  border-radius:var(--radius);padding:16px 20px;margin-bottom:12px;
+  transition:border-color .2s,transform .15s;
+}
+.tl-card:hover{border-color:var(--border2);transform:translateX(2px);}
 
-/* ── STOP CARDS ── */
-.stop-list { display: flex; flex-direction: column; gap: 0; }
+/* Card types */
+.type-sc .tl-card{
+  border-color:rgba(0,212,255,.2);
+  background:linear-gradient(135deg,rgba(0,212,255,.04),var(--panel));
+}
+.type-sc .tl-card:hover{border-color:rgba(0,212,255,.4);}
+.type-indian .tl-card{
+  border-color:rgba(245,166,35,.2);
+  background:linear-gradient(135deg,rgba(245,166,35,.04),var(--panel));
+}
+.type-indian .tl-card:hover{border-color:rgba(245,166,35,.4);}
+.type-scenic .tl-card{border-color:rgba(74,222,128,.15);}
+.type-home .tl-card{border-color:rgba(129,140,248,.2);background:linear-gradient(135deg,rgba(129,140,248,.03),var(--panel));}
 
-.stop-row {
-  display: grid;
-  grid-template-columns: 36px 1fr auto;
-  gap: 0 20px;
-  align-items: stretch;
-  position: relative;
-}
+/* Card internals */
+.card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:6px;}
+.card-name{font-size:.95rem;font-weight:700;display:flex;align-items:center;gap:7px;flex-wrap:wrap;}
+.badge{font-family:'Space Mono',monospace;font-size:.55rem;letter-spacing:1px;text-transform:uppercase;padding:2px 7px;border-radius:3px;}
+.badge-sc{background:rgba(0,212,255,.12);color:var(--electric);border:1px solid rgba(0,212,255,.25);}
+.badge-indian{background:var(--indian-bg);color:var(--indian);border:1px solid rgba(245,166,35,.25);}
+.badge-warn{background:rgba(255,107,53,.12);color:var(--warn);border:1px solid rgba(255,107,53,.25);}
+.badge-scenic{background:rgba(74,222,128,.1);color:var(--scenic);border:1px solid rgba(74,222,128,.2);}
+.badge-free{background:rgba(74,222,128,.1);color:var(--scenic);border:1px solid rgba(74,222,128,.2);}
+.card-type{font-family:'Space Mono',monospace;font-size:.65rem;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:7px;}
+.card-notes{font-size:.83rem;color:rgba(232,234,240,.68);line-height:1.65;}
 
-/* Vertical line connector */
-.stop-row:not(:last-child) .stop-line::after {
-  content: '';
-  position: absolute;
-  left: 17px; top: 36px; bottom: -16px;
-  width: 2px;
-  background: var(--border);
-}
+.card-right{text-align:right;flex-shrink:0;min-width:80px;}
+.card-time{font-family:'Space Mono',monospace;font-size:.9rem;font-weight:700;}
+.card-dur{font-family:'Space Mono',monospace;font-size:.65rem;color:var(--muted);margin-top:2px;}
 
-.stop-dot {
-  width: 36px; flex-shrink: 0;
-  display: flex; flex-direction: column; align-items: center;
-  padding-top: 20px;
-  position: relative;
-}
-.stop-dot-inner {
-  width: 14px; height: 14px; border-radius: 50%;
-  border: 2px solid var(--border);
-  background: var(--bg);
-  z-index: 1;
-  transition: all 0.2s;
-  flex-shrink: 0;
-}
-.stop-row.is-charger .stop-dot-inner {
-  width: 20px; height: 20px;
-  border-color: var(--electric);
-  background: rgba(0,212,255,0.15);
-  box-shadow: 0 0 12px rgba(0,212,255,0.4);
-}
-.stop-dot-line {
-  width: 2px; flex: 1; min-height: 16px;
-  background: var(--border);
-  margin-top: 4px;
-}
-.stop-row:last-child .stop-dot-line { display: none; }
+/* Charge display */
+.charge-display{display:flex;align-items:center;gap:5px;margin-top:4px;justify-content:flex-end;}
+.ch-before{font-family:'Space Mono',monospace;font-size:.75rem;font-weight:700;color:var(--warn);}
+.ch-before.ok{color:var(--ok);}
+.ch-arr{color:var(--muted);font-size:.7rem;}
+.ch-after{font-family:'Space Mono',monospace;font-size:.75rem;font-weight:700;color:var(--electric);}
+.ch-time{font-family:'Space Mono',monospace;font-size:.6rem;color:var(--electric);margin-top:2px;text-align:right;}
 
-.stop-card {
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 18px 22px;
-  margin-bottom: 16px;
-  transition: border-color 0.2s, transform 0.2s;
-  cursor: default;
+.card-links{display:flex;gap:8px;margin-top:11px;flex-wrap:wrap;}
+.card-links a{
+  font-family:'Space Mono',monospace;font-size:.58rem;letter-spacing:.8px;text-transform:uppercase;
+  padding:4px 10px;border-radius:5px;text-decoration:none;transition:all .15s;
 }
-.stop-card:hover { border-color: rgba(255,255,255,0.15); transform: translateX(2px); }
-.stop-row.is-charger .stop-card {
-  border-color: rgba(0,212,255,0.25);
-  background: linear-gradient(135deg, rgba(0,212,255,0.05), var(--panel));
-}
-.stop-row.is-charger .stop-card:hover { border-color: rgba(0,212,255,0.5); }
+.lmap{background:rgba(59,130,246,.1);color:var(--d1);border:1px solid rgba(59,130,246,.2);}
+.lmap:hover{background:var(--d1);color:#fff;}
+.lweb{background:rgba(16,185,129,.1);color:var(--ok);border:1px solid rgba(16,185,129,.2);}
+.lweb:hover{background:var(--ok);color:#000;}
+.lsc{background:rgba(0,212,255,.08);color:var(--electric);border:1px solid rgba(0,212,255,.2);}
+.lsc:hover{background:var(--electric);color:var(--bg);}
 
-.stop-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 6px; }
-.stop-name { font-size: 0.98rem; font-weight: 700; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.sc-badge {
-  font-family: 'Space Mono', monospace;
-  font-size: 0.58rem; letter-spacing: 1.5px; text-transform: uppercase;
-  background: rgba(0,212,255,0.15);
-  color: var(--electric);
-  border: 1px solid rgba(0,212,255,0.3);
-  padding: 2px 8px; border-radius: 4px;
+/* ── DRIVE CONNECTOR ── */
+.drive-conn{
+  padding:0 0 0 36px;
+  font-family:'Space Mono',monospace;font-size:.62rem;color:var(--muted);
+  margin:-4px 0 4px;display:flex;align-items:center;gap:8px;
 }
-.warn-badge {
-  font-family: 'Space Mono', monospace;
-  font-size: 0.58rem; letter-spacing: 1px;
-  background: rgba(255,107,53,0.15);
-  color: var(--warn);
-  border: 1px solid rgba(255,107,53,0.3);
-  padding: 2px 8px; border-radius: 4px;
-}
-.stop-type { font-size: 0.72rem; color: var(--muted); font-family: 'Space Mono', monospace; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
-.stop-notes { font-size: 0.85rem; color: rgba(232,234,240,0.7); line-height: 1.6; }
+.drive-conn::before{content:'↓';color:rgba(255,255,255,.15);}
+.drive-conn .mi{color:var(--electric);}
 
-.stop-right { text-align: right; flex-shrink: 0; }
-.stop-charge {
-  display: flex; gap: 8px; align-items: center;
-  font-family: 'Space Mono', monospace; font-size: 0.85rem;
+/* ── WARN BOX ── */
+.warn-box{
+  background:rgba(255,107,53,.07);border:1px solid rgba(255,107,53,.25);
+  border-left:4px solid var(--warn);border-radius:var(--radius);
+  padding:18px 22px;margin:32px 0;
 }
-.charge-before { color: var(--warn); font-weight: 700; }
-.charge-before.ok { color: var(--ok); }
-.charge-arrow { color: var(--muted); }
-.charge-after { color: var(--electric); font-weight: 700; }
-.charge-time {
-  margin-top: 4px;
-  font-family: 'Space Mono', monospace;
-  font-size: 0.7rem;
-  color: var(--muted);
-  text-align: right;
-}
-.charge-time.active { color: var(--electric); }
+.warn-title{font-family:'Space Mono',monospace;font-size:.65rem;letter-spacing:2px;text-transform:uppercase;color:var(--warn);margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+.warn-box p{font-size:.87rem;color:rgba(232,234,240,.8);line-height:1.7;}
+.warn-box strong{color:var(--warn);}
 
-.stop-links { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
-.stop-links a {
-  font-family: 'Space Mono', monospace;
-  font-size: 0.65rem; letter-spacing: 1px; text-transform: uppercase;
-  padding: 5px 12px; border-radius: 6px;
-  text-decoration: none;
-  transition: all 0.15s;
-}
-.link-map { background: rgba(45,125,210,0.15); color: var(--d1); border: 1px solid rgba(45,125,210,0.3); }
-.link-map:hover { background: var(--d1); color: white; }
-.link-sc { background: rgba(0,212,255,0.1); color: var(--electric); border: 1px solid rgba(0,212,255,0.25); }
-.link-sc:hover { background: var(--electric); color: var(--bg); }
+/* ── INDIAN SECTION ── */
+.indian-section{padding:64px 0;border-top:1px solid var(--border);}
+.indian-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;}
+.icard{background:var(--panel);border:1px solid rgba(245,166,35,.2);border-radius:var(--radius);padding:20px;position:relative;overflow:hidden;}
+.icard::before{content:'🍛';position:absolute;bottom:12px;right:12px;font-size:1.6rem;opacity:.08;}
+.icard-tag{font-family:'Space Mono',monospace;font-size:.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--indian);margin-bottom:8px;display:block;}
+.icard-name{font-size:1rem;font-weight:700;margin-bottom:3px;}
+.icard-city{font-size:.75rem;color:var(--muted);margin-bottom:10px;}
+.icard-rating{font-family:'Space Mono',monospace;font-size:1.4rem;font-weight:700;color:var(--indian);margin-bottom:8px;}
+.icard-hours{font-size:.78rem;color:rgba(232,234,240,.65);line-height:1.65;}
+.icard-closed{font-size:.72rem;font-weight:700;color:var(--warn);margin-top:5px;}
+.icard-dishes{font-size:.75rem;color:var(--ok);margin-top:8px;font-style:italic;}
+.icard-link{margin-top:12px;}
+.icard-link a{font-family:'Space Mono',monospace;font-size:.58rem;letter-spacing:.8px;text-transform:uppercase;padding:4px 10px;border-radius:5px;text-decoration:none;background:rgba(245,166,35,.1);color:var(--indian);border:1px solid rgba(245,166,35,.2);}
 
-/* ── MILES CONNECTOR ── */
-.miles-conn {
-  padding: 0 0 0 56px;
-  font-family: 'Space Mono', monospace;
-  font-size: 0.68rem;
-  color: var(--muted);
-  margin: -8px 0 8px;
-  display: flex; align-items: center; gap: 8px;
-}
-.miles-conn::before {
-  content: '↓';
-  color: var(--border);
-}
-.miles-conn span { color: var(--electric); }
+/* ── MAPS SECTION ── */
+.maps-section{padding:64px 0;border-top:1px solid var(--border);}
+.map-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px;}
+.mcard{border-radius:var(--radius);padding:20px;text-decoration:none;color:inherit;transition:transform .2s,box-shadow .2s;display:block;border:1px solid var(--border);}
+.mcard:hover{transform:translateY(-3px);box-shadow:0 16px 40px rgba(0,0,0,.4);}
+.mcard.mc1{background:var(--d1-bg);border-color:rgba(59,130,246,.2);}
+.mcard.mc2{background:var(--d2-bg);border-color:rgba(16,185,129,.2);}
+.mcard.mc3{background:var(--d3-bg);border-color:rgba(245,158,11,.2);}
+.mcard.mc4{background:var(--d4-bg);border-color:rgba(139,92,246,.2);}
+.mcard-label{font-family:'Space Mono',monospace;font-size:.6rem;text-transform:uppercase;letter-spacing:2px;font-weight:700;margin-bottom:8px;opacity:.55;}
+.mcard-title{font-weight:600;font-size:.85rem;line-height:1.45;margin-bottom:12px;}
+.mcard-cta{font-family:'Space Mono',monospace;font-size:.65rem;letter-spacing:1px;text-transform:uppercase;font-weight:700;}
+.mc1 .mcard-cta{color:var(--d1);}.mc2 .mcard-cta{color:var(--d2);}.mc3 .mcard-cta{color:var(--d3);}.mc4 .mcard-cta{color:var(--d4);}
 
-/* ── SC DIRECTORY ── */
-.sc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
-.sc-card {
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 22px;
-  position: relative;
-  overflow: hidden;
-  transition: border-color 0.2s, transform 0.2s;
-}
-.sc-card::before {
-  content: '⚡';
-  position: absolute; top: 16px; right: 16px;
-  font-size: 1.4rem; opacity: 0.08;
-}
-.sc-card:hover { border-color: rgba(0,212,255,0.35); transform: translateY(-2px); }
-.sc-card.critical { border-color: rgba(255,107,53,0.3); }
-.sc-card.critical:hover { border-color: var(--warn); }
-.sc-num {
-  font-family: 'Space Mono', monospace;
-  font-size: 0.6rem; color: var(--electric);
-  letter-spacing: 2px; text-transform: uppercase;
-  margin-bottom: 8px; display: block;
-}
-.sc-name { font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
-.sc-addr { font-size: 0.8rem; color: var(--muted); margin-bottom: 14px; line-height: 1.5; }
-.sc-specs {
-  display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px;
-}
-.spec-pill {
-  font-family: 'Space Mono', monospace;
-  font-size: 0.62rem; padding: 3px 9px; border-radius: 4px;
-  letter-spacing: 0.5px;
-}
-.spec-power { background: rgba(0,212,255,0.1); color: var(--electric); border: 1px solid rgba(0,212,255,0.2); }
-.spec-stalls { background: rgba(0,200,117,0.1); color: var(--ok); border: 1px solid rgba(0,200,117,0.2); }
-.spec-note { background: rgba(255,184,0,0.1); color: var(--gold); border: 1px solid rgba(255,184,0,0.2); }
-.spec-warn { background: rgba(255,107,53,0.12); color: var(--warn); border: 1px solid rgba(255,107,53,0.25); }
-.sc-links { display: flex; gap: 8px; }
-.sc-links a {
-  font-family: 'Space Mono', monospace;
-  font-size: 0.6rem; letter-spacing: 1px; text-transform: uppercase;
-  padding: 5px 10px; border-radius: 6px;
-  text-decoration: none; transition: all 0.15s;
-}
+/* ── STORES ── */
+.stores-section{padding:64px 0;border-top:1px solid var(--border);}
+.store-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;}
+.store-card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:22px;}
+.store-card.costco{border-color:rgba(59,130,246,.2);}
+.store-card.fred{border-color:rgba(16,185,129,.2);}
+.store-name{font-size:1rem;font-weight:700;margin-bottom:3px;}
+.store-dist{font-family:'Space Mono',monospace;font-size:.72rem;font-weight:700;color:var(--ok);margin-bottom:10px;}
+.store-info{font-size:.82rem;color:rgba(232,234,240,.65);line-height:1.7;margin-bottom:14px;}
 
-/* ── WARNING BOX ── */
-.warn-box {
-  background: rgba(255,107,53,0.08);
-  border: 1px solid rgba(255,107,53,0.3);
-  border-left: 4px solid var(--warn);
-  border-radius: var(--radius);
-  padding: 20px 24px;
-  margin: 32px 0;
-}
-.warn-box-title {
-  font-family: 'Space Mono', monospace;
-  font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase;
-  color: var(--warn); margin-bottom: 8px;
-  display: flex; align-items: center; gap: 8px;
-}
-.warn-box p { font-size: 0.9rem; color: rgba(232,234,240,0.8); line-height: 1.7; }
-.warn-box strong { color: var(--warn); }
+/* ── TIPS ── */
+.tips-section{padding:64px 0;border-top:1px solid var(--border);}
+.tips-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;}
+.tip{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;}
+.tip.warn{border-left:4px solid var(--warn);}
+.tip.info{border-left:4px solid var(--electric);}
+.tip.good{border-left:4px solid var(--ok);}
+.tip-icon{font-size:1rem;margin-bottom:6px;}
+.tip-title{font-family:'Space Mono',monospace;font-size:.65rem;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:5px;}
+.tip.warn .tip-title{color:var(--warn);}.tip.info .tip-title{color:var(--electric);}.tip.good .tip-title{color:var(--ok);}
+.tip-text{font-size:.82rem;color:rgba(232,234,240,.65);line-height:1.55;}
 
-/* ── SUMMARY TABLE ── */
-.summary-table { width: 100%; border-collapse: collapse; margin-top: 24px; }
-.summary-table th {
-  font-family: 'Space Mono', monospace;
-  font-size: 0.62rem; letter-spacing: 2px; text-transform: uppercase;
-  color: var(--muted); text-align: left;
-  padding: 12px 16px;
-  border-bottom: 1px solid var(--border);
-}
-.summary-table td {
-  padding: 14px 16px; font-size: 0.88rem;
-  border-bottom: 1px solid rgba(255,255,255,0.04);
-  vertical-align: middle;
-}
-.summary-table tr:last-child td { border-bottom: none; }
-.summary-table tr:hover td { background: rgba(255,255,255,0.02); }
-.td-day {
-  font-family: 'Space Mono', monospace;
-  font-size: 0.7rem; font-weight: 700;
-  letter-spacing: 1px;
-}
-.td-sc { font-weight: 600; color: var(--electric); }
-.td-before { font-family: 'Space Mono', monospace; font-weight: 700; }
-.td-before.warn { color: var(--warn); }
-.td-before.ok   { color: var(--ok); }
-.td-after  { font-family: 'Space Mono', monospace; color: var(--electric); font-weight: 700; }
-.td-time   { font-family: 'Space Mono', monospace; font-size: 0.8rem; color: var(--gold); }
+/* ── SECTION HEADER ── */
+.sec-hdr{margin-bottom:36px;}
+.sec-tag{font-family:'Space Mono',monospace;font-size:.62rem;letter-spacing:3px;text-transform:uppercase;color:var(--electric);display:block;margin-bottom:8px;}
+.sec-hdr h2{font-size:clamp(1.5rem,3vw,2.2rem);font-weight:800;}
+.sec-hdr p{color:var(--muted);margin-top:8px;font-size:.9rem;}
 
-/* ── FOOTER ── */
-footer {
-  border-top: 1px solid var(--border);
-  padding: 40px 24px;
-  text-align: center;
-  color: var(--muted);
-  font-family: 'Space Mono', monospace;
-  font-size: 0.65rem;
-  letter-spacing: 1.5px;
-}
-footer strong { color: var(--electric); }
+footer{border-top:1px solid var(--border);padding:36px 24px;text-align:center;font-family:'Space Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:1px;}
+footer strong{color:var(--electric);}
 
-@media (max-width: 640px) {
-  .hero-stats { flex-direction: column; gap: 0; }
-  .hero-stat { border-right: none; border-bottom: 1px solid var(--border); }
-  .nav { padding: 0 12px; }
-  .stop-right { display: none; }
-  .section { padding: 56px 0 24px; }
-  .container { padding: 0 16px; }
-  .sc-grid { grid-template-columns: 1fr; }
+@media(max-width:640px){
+  .hero-stats{flex-direction:column;}.hstat{border-right:none;border-bottom:1px solid var(--border);}
+  .nav{padding:0 10px;}.container{padding:0 14px;}.card-right{display:none;}
+  .day-section{padding:48px 0 16px;}
 }
 </style>
 </head>
@@ -471,173 +287,206 @@ footer strong { color: var(--electric); }
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-glow"></div>
   <div class="hero-grid"></div>
-  <div class="hero-eyebrow">Tesla Supercharger Plan</div>
+  <div class="hero-glow"></div>
+  <div class="hero-eyebrow">Family Road Trip &nbsp;·&nbsp; Tesla Edition</div>
   <h1>
-    <span class="route">Bellevue &rarr; Boise</span>
-    <span class="via">Family Road Trip &nbsp;·&nbsp; Idaho Route &nbsp;·&nbsp; 4 Days</span>
+    <span class="r1">Bellevue &rarr; Boise</span>
+    <span class="r2">4 Days &nbsp;·&nbsp; Idaho Route &nbsp;·&nbsp; No Oregon &nbsp;·&nbsp; Tesla Charging Included</span>
   </h1>
-  <p class="hero-sub">Complete charging plan for your Tesla along the I-90 &rarr; US-195 &rarr; US-95 corridor. Starting charge: 280 miles.</p>
+  <p class="hero-sub">Complete itinerary with 25 stops, 4 Indian restaurant meals, scenic highlights and a full Tesla Supercharger charging plan — all in one place.</p>
   <div class="hero-stats">
-    <div class="hero-stat">
-      <span class="stat-num">9</span>
-      <span class="stat-label">SC Stops</span>
-    </div>
-    <div class="hero-stat">
-      <span class="stat-num">280 mi</span>
-      <span class="stat-label">Start Charge</span>
-    </div>
-    <div class="hero-stat">
-      <span class="stat-num">~2.5 hrs</span>
-      <span class="stat-label">Total Charge Time</span>
-    </div>
-    <div class="hero-stat">
-      <span class="stat-num">8</span>
-      <span class="stat-label">SC Stations</span>
-    </div>
+    <div class="hstat"><span class="hstat-num">4</span><span class="hstat-label">Days</span></div>
+    <div class="hstat"><span class="hstat-num">25</span><span class="hstat-label">Stops</span></div>
+    <div class="hstat"><span class="hstat-num">4</span><span class="hstat-label">Indian Meals</span></div>
+    <div class="hstat"><span class="hstat-num">9</span><span class="hstat-label">SC Stops</span></div>
+    <div class="hstat"><span class="hstat-num">280 mi</span><span class="hstat-label">Start Charge</span></div>
   </div>
 </section>
 
+<!-- AIRBNB BANNER -->
+<div style="background:rgba(245,158,11,.07);border-bottom:1px solid rgba(245,158,11,.15);padding:12px 32px;font-family:'Space Mono',monospace;font-size:.7rem;color:rgba(232,234,240,.65);display:flex;align-items:center;gap:10px;">
+  <span style="color:var(--gold)">&#127968;</span>
+  <span><strong style="color:var(--gold)">Airbnb Home Base (3 nights):</strong> 6976 W Redwood Crk Dr, Meridian, ID 83646 &nbsp;&middot;&nbsp; Costco ~3 mi &nbsp;&middot;&nbsp; Red Fort ~8 mi &nbsp;&middot;&nbsp; Bombay Grill ~9 mi</span>
+</div>
+
 <!-- NAV -->
 <nav class="nav">
-  <a href="#day1" class="d1t">Day 1</a>
-  <a href="#day2" class="d2t">Day 2</a>
-  <a href="#day3" class="d3t">Day 3</a>
-  <a href="#day4" class="d4t">Day 4</a>
-  <a href="#directory">⚡ SC Directory</a>
-  <a href="#summary">📊 Summary</a>
-  <a href="#warning">⚠ Gap Warning</a>
+  <a href="#day1">Day 1</a>
+  <a href="#day2">Day 2</a>
+  <a href="#day3">Day 3</a>
+  <a href="#day4">Day 4</a>
+  <a href="#restaurants">&#127859; Indian Food</a>
+  <a href="#gmaps">&#128506; Maps</a>
+  <a href="#stores">&#128722; Stores</a>
+  <a href="#tips">&#128161; Tips</a>
 </nav>
 
 <main>
 
-<!-- ══ DAY 1 ══ -->
-<section id="day1" class="day-section">
+<!-- ═══════════════ DAY 1 ═══════════════ -->
+<section id="day1" class="day-section d1s">
 <div class="container">
-  <div class="day-label d1">
-    <div class="day-num">01</div>
-    <div class="day-label-text">
-      <h3>Bellevue → Meridian</h3>
-      <p>466 mi total &nbsp;·&nbsp; 3 supercharger stops &nbsp;·&nbsp; I-90 → US-195 → US-95</p>
+  <div class="day-hdr">
+    <div class="day-num-badge">01</div>
+    <div class="day-hdr-text">
+      <h2>Bellevue &rarr; Meridian via Lewiston</h2>
+      <p>~466 miles &nbsp;&middot;&nbsp; Depart 7 AM &nbsp;&middot;&nbsp; I-90 &rarr; US-195 &rarr; US-95 &nbsp;&middot;&nbsp; 3 SC stops</p>
+      <div class="day-pills">
+        <span class="dpill dpill-sc">&#9889; Moses Lake SC</span>
+        <span class="dpill dpill-sc">&#9889; Liberty Lake SC</span>
+        <span class="dpill dpill-sc">&#9889; Lewiston SC</span>
+        <span class="dpill dpill-indian">&#127859; Mango Tree Lewiston</span>
+      </div>
     </div>
   </div>
 
-  <div class="stop-list">
+  <div class="timeline">
 
-    <div class="stop-row">
-      <div class="stop-dot"><div class="stop-dot-inner"></div><div class="stop-dot-line"></div></div>
-      <div class="stop-card">
-        <div class="stop-top">
-          <div>
-            <div class="stop-name">🏠 Depart Bellevue</div>
-            <div class="stop-type">Home Start</div>
-            <div class="stop-notes">Start fully charged at home. Head east on I-90. Home-cooked breakfast before departing!</div>
-          </div>
-          <div class="stop-right">
-            <div class="stop-charge"><span class="charge-after">280 mi</span></div>
-            <div class="charge-time">7:00 AM</div>
-          </div>
+    <!-- Stop 1 -->
+    <div class="tl-row type-home">
+      <div class="tl-spine"><div class="tl-dot"></div><div class="tl-line"></div></div>
+      <div class="tl-card">
+        <div class="card-top">
+          <div><div class="card-name">&#127968; Bellevue, WA &ndash; Depart</div><div class="card-type">Home Start &nbsp;&middot;&nbsp; Light home-cooked breakfast first!</div>
+          <div class="card-notes">Depart at 7 AM. Total Day 1 = ~466 miles. Fill gas topped up, charge tablets, pack snacks. Head east on I-90. Start with <strong style="color:var(--electric)">280 mi</strong> range.</div></div>
+          <div class="card-right"><div class="card-time">7:00 AM</div><div class="card-dur">Depart</div><div class="charge-display"><span class="ch-after">280 mi</span></div></div>
         </div>
       </div>
     </div>
+    <div class="drive-conn"><span class="mi">180 mi &middot; ~2.5 hrs</span> east on I-90</div>
 
-    <div class="miles-conn"><span>180 mi · ~2.5 hrs</span> east on I-90</div>
-
-    <div class="stop-row is-charger">
-      <div class="stop-dot"><div class="stop-dot-inner"></div><div class="stop-dot-line"></div></div>
-      <div class="stop-card">
-        <div class="stop-top">
-          <div>
-            <div class="stop-name">⚡ Supercharger — Moses Lake <span class="sc-badge">V3 · 250kW</span> <span class="warn-badge">⚠ MUST CHARGE</span></div>
-            <div class="stop-type">Tesla Supercharger · 12 stalls · 24/7</div>
-            <div class="stop-notes">2709 W Broadway Ave, Moses Lake, WA 98837. Only ~100 mi left after 180 mi drive — MUST charge here. Subway &amp; Starbucks on site. Mom &amp; Pop's Diner is 2 mi away — great time to grab breakfast while charging!</div>
-          </div>
-          <div class="stop-right">
-            <div class="stop-charge">
-              <span class="charge-before">100 mi</span>
-              <span class="charge-arrow">→</span>
-              <span class="charge-after">270 mi</span>
-            </div>
-            <div class="charge-time active">~30 min</div>
-          </div>
+    <!-- SC: Moses Lake -->
+    <div class="tl-row type-sc">
+      <div class="tl-spine"><div class="tl-dot"></div><div class="tl-line"></div></div>
+      <div class="tl-card">
+        <div class="card-top">
+          <div><div class="card-name">&#9889; SC: Moses Lake <span class="badge badge-sc">V3 &middot; 250kW &middot; 12 stalls</span><span class="badge badge-warn">&#9888; MUST CHARGE</span></div>
+          <div class="card-type">Tesla Supercharger &nbsp;&middot;&nbsp; 2709 W Broadway Ave, Moses Lake, WA 98837 &nbsp;&middot;&nbsp; 24/7</div>
+          <div class="card-notes">Only ~100 mi left after 180 mi drive &mdash; must charge here. Subway &amp; Starbucks on site. Mom &amp; Pop's Diner is 2 miles away &mdash; great time for the family to stretch and grab coffee while the car charges!</div></div>
+          <div class="card-right"><div class="charge-display"><span class="ch-before">100 mi</span><span class="ch-arr">&rarr;</span><span class="ch-after">270 mi</span></div><div class="ch-time">~30 min</div></div>
         </div>
-        <div class="stop-links">
-          <a href="https://www.google.com/maps/dir/?api=1&destination=2709+W+Broadway+Ave,+Moses+Lake,+WA+98837" target="_blank" class="link-map">📍 Directions</a>
-          <a href="https://www.tesla.com/findus/location/supercharger/moseslakesupercharger" target="_blank" class="link-sc">⚡ Tesla.com</a>
+        <div class="card-links">
+          <a href="https://www.google.com/maps/dir/?api=1&destination=2709+W+Broadway+Ave,+Moses+Lake,+WA+98837" target="_blank" class="lmap">&#128205; Directions</a>
+          <a href="https://www.tesla.com/findus/location/supercharger/moseslakesupercharger" target="_blank" class="lsc">&#9889; Tesla.com</a>
         </div>
       </div>
     </div>
+    <div class="drive-conn"><span class="mi">2 mi</span> within Moses Lake</div>
 
-    <div class="miles-conn"><span>93 mi · ~1.5 hrs</span> east to Spokane area</div>
-
-    <div class="stop-row is-charger">
-      <div class="stop-dot"><div class="stop-dot-inner"></div><div class="stop-dot-line"></div></div>
-      <div class="stop-card">
-        <div class="stop-top">
-          <div>
-            <div class="stop-name">⚡ Supercharger — Liberty Lake (Spokane) <span class="sc-badge">V4 · 250kW</span></div>
-            <div class="stop-type">Tesla Supercharger · 16 stalls · 24/7</div>
-            <div class="stop-notes">21728 E Mission Ave, Liberty Lake, WA 99019. Newest V4 station near Spokane. Charge to full 280 mi here — this is the LAST supercharger before the US-95 Idaho canyon stretch. Tesla service center on site.</div>
-          </div>
-          <div class="stop-right">
-            <div class="stop-charge">
-              <span class="charge-before ok">175 mi</span>
-              <span class="charge-arrow">→</span>
-              <span class="charge-after">280 mi</span>
-            </div>
-            <div class="charge-time active">~20 min</div>
-          </div>
-        </div>
-        <div class="stop-links">
-          <a href="https://www.google.com/maps/dir/?api=1&destination=21728+E+Mission+Ave,+Liberty+Lake,+WA+99019" target="_blank" class="link-map">📍 Directions</a>
-          <a href="https://www.tesla.com/findus/location/supercharger/SpokaneWASupercharger" target="_blank" class="link-sc">⚡ Tesla.com</a>
+    <!-- Stop 2: Moses Lake Rest -->
+    <div class="tl-row">
+      <div class="tl-spine"><div class="tl-dot"></div><div class="tl-line"></div></div>
+      <div class="tl-card">
+        <div class="card-top">
+          <div><div class="card-name">Moses Lake &ndash; Rest &amp; Stretch</div><div class="card-type">Rest Stop &nbsp;&middot;&nbsp; I-90 Exit 176</div>
+          <div class="card-notes">Restroom, stretch legs, grab coffee. McCosh Park is 5 min off I-90 if kids need to run.</div></div>
+          <div class="card-right"><div class="card-time">9:30 AM</div><div class="card-dur">20 min</div></div>
         </div>
       </div>
     </div>
+    <div class="drive-conn"><span class="mi">0 mi</span> same area</div>
 
-    <div class="miles-conn"><span>110 mi · ~1.5 hrs</span> south on US-195 → Lewiston</div>
-
-    <div class="stop-row is-charger">
-      <div class="stop-dot"><div class="stop-dot-inner"></div><div class="stop-dot-line"></div></div>
-      <div class="stop-card">
-        <div class="stop-top">
-          <div>
-            <div class="stop-name">⚡ Supercharger — Lewiston, ID <span class="sc-badge">V3 · 12 stalls</span> <span class="warn-badge">LAST SC BEFORE AIRBNB</span></div>
-            <div class="stop-type">Tesla Supercharger · WinCo Parking Lot · 24/7</div>
-            <div class="stop-notes">2001 17th St, Lewiston, ID 83501. Critical stop — US-95 south has NO superchargers for 81 miles to Meridian! Top up to full here. Also a great lunch stop at The Mango Tree (Indian restaurant, ★4.7) just nearby on Main St.</div>
-          </div>
-          <div class="stop-right">
-            <div class="stop-charge">
-              <span class="charge-before ok">170 mi</span>
-              <span class="charge-arrow">→</span>
-              <span class="charge-after">280 mi</span>
-            </div>
-            <div class="charge-time active">~20 min</div>
-          </div>
+    <!-- Stop 3: Mom & Pop's -->
+    <div class="tl-row">
+      <div class="tl-spine"><div class="tl-dot"></div><div class="tl-line"></div></div>
+      <div class="tl-card">
+        <div class="card-top">
+          <div><div class="card-name">&#129374; Mom and Pop's Diner &ndash; Moses Lake</div><div class="card-type">Breakfast Stop &nbsp;&middot;&nbsp; 805 W Broadway Ave, Moses Lake, WA</div>
+          <div class="card-notes">&#9733; 4.5 | 818 reviews | Dine in a historic <strong>1910s Seattle tram car</strong> &mdash; kids love it! Western omelette, French toast, pancakes, hash browns, bottomless coffee. &#9888; CLOSED MONDAYS. Open Tue&ndash;Sun 8 AM&ndash;3 PM. &#9742; +1 509-855-7294</div></div>
+          <div class="card-right"><div class="card-time">9:55 AM</div><div class="card-dur">45 min</div></div>
         </div>
-        <div class="stop-links">
-          <a href="https://www.google.com/maps/dir/?api=1&destination=2001+17th+St,+Lewiston,+ID+83501" target="_blank" class="link-map">📍 Directions</a>
-          <a href="https://www.tesla.com/findus/location/supercharger/19118" target="_blank" class="link-sc">⚡ Tesla.com</a>
+        <div class="card-links">
+          <a href="https://www.google.com/maps/dir/?api=1&destination=805+W+Broadway+Ave,+Moses+Lake,+WA+98837" target="_blank" class="lmap">&#128205; Directions</a>
+          <a href="https://www.facebook.com/momandpopsdinermoseslake" target="_blank" class="lweb">&#127760; Facebook</a>
         </div>
       </div>
     </div>
+    <div class="drive-conn"><span class="mi">95 mi &middot; ~1.5 hrs</span> east on I-90 to Spokane area</div>
 
-    <div class="miles-conn"><span>81 mi · ~1 hr</span> south on US-95 → Meridian</div>
+    <!-- SC: Liberty Lake -->
+    <div class="tl-row type-sc">
+      <div class="tl-spine"><div class="tl-dot"></div><div class="tl-line"></div></div>
+      <div class="tl-card">
+        <div class="card-top">
+          <div><div class="card-name">&#9889; SC: Liberty Lake (Spokane) <span class="badge badge-sc">V4 &middot; 250kW &middot; 16 stalls</span></div>
+          <div class="card-type">Tesla Supercharger &nbsp;&middot;&nbsp; 21728 E Mission Ave, Liberty Lake, WA 99019 &nbsp;&middot;&nbsp; 24/7</div>
+          <div class="card-notes">Newest V4 station near Spokane. Charge to full 280 mi before the US-95 Idaho canyon stretch &mdash; no more superchargers until Lewiston. Tesla service center on site.</div></div>
+          <div class="card-right"><div class="charge-display"><span class="ch-before ok">175 mi</span><span class="ch-arr">&rarr;</span><span class="ch-after">280 mi</span></div><div class="ch-time">~20 min</div></div>
+        </div>
+        <div class="card-links">
+          <a href="https://www.google.com/maps/dir/?api=1&destination=21728+E+Mission+Ave,+Liberty+Lake,+WA+99019" target="_blank" class="lmap">&#128205; Directions</a>
+          <a href="https://www.tesla.com/findus/location/supercharger/SpokaneWASupercharger" target="_blank" class="lsc">&#9889; Tesla.com</a>
+        </div>
+      </div>
+    </div>
+    <div class="drive-conn"><span class="mi">110 mi &middot; ~1.5 hrs</span> south on US-195 &rarr; Lewiston</div>
 
-    <div class="stop-row">
-      <div class="stop-dot"><div class="stop-dot-inner"></div></div>
-      <div class="stop-card">
-        <div class="stop-top">
-          <div>
-            <div class="stop-name">🏠 Arrive — Airbnb, Meridian</div>
-            <div class="stop-type">6976 W Redwood Crk Dr, Meridian, ID 83646</div>
-            <div class="stop-notes">Arrive with ~199 mi range. ✅ Comfortable cushion. Costco is just 3 miles away to stock up!</div>
-          </div>
-          <div class="stop-right">
-            <div class="stop-charge"><span class="charge-before ok">199 mi</span></div>
-            <div class="charge-time">~3:30 PM</div>
-          </div>
+    <!-- SC + Indian: Lewiston -->
+    <div class="tl-row type-sc">
+      <div class="tl-spine"><div class="tl-dot"></div><div class="tl-line"></div></div>
+      <div class="tl-card">
+        <div class="card-top">
+          <div><div class="card-name">&#9889; SC: Lewiston, ID <span class="badge badge-sc">V3 &middot; 12 stalls</span><span class="badge badge-warn">LAST SC BEFORE AIRBNB</span></div>
+          <div class="card-type">Tesla Supercharger &nbsp;&middot;&nbsp; 2001 17th St (WinCo Parking Lot), Lewiston, ID &nbsp;&middot;&nbsp; 24/7</div>
+          <div class="card-notes">US-95 south has <strong style="color:var(--warn)">NO superchargers</strong> for 81 miles to Meridian! Charge to full here. <strong style="color:var(--indian)">Perfect time for The Mango Tree lunch while charging!</strong></div></div>
+          <div class="card-right"><div class="charge-display"><span class="ch-before ok">170 mi</span><span class="ch-arr">&rarr;</span><span class="ch-after">280 mi</span></div><div class="ch-time">~20 min</div></div>
+        </div>
+        <div class="card-links">
+          <a href="https://www.google.com/maps/dir/?api=1&destination=2001+17th+St,+Lewiston,+ID+83501" target="_blank" class="lmap">&#128205; SC Directions</a>
+          <a href="https://www.tesla.com/findus/location/supercharger/19118" target="_blank" class="lsc">&#9889; Tesla.com</a>
+        </div>
+      </div>
+    </div>
+    <div class="drive-conn"><span class="mi">0 mi</span> same area</div>
+
+    <!-- Stop 4: Mango Tree Indian -->
+    <div class="tl-row type-indian">
+      <div class="tl-spine"><div class="tl-dot"></div><div class="tl-line"></div></div>
+      <div class="tl-card">
+        <div class="card-top">
+          <div><div class="card-name">&#127859; The Mango Tree &ndash; Lewiston <span class="badge badge-indian">Indian Lunch</span></div>
+          <div class="card-type">Indian Restaurant &nbsp;&middot;&nbsp; 524 Main St, Lewiston, ID 83501</div>
+          <div class="card-notes">&#9733; 4.7 | Open daily 11 AM&ndash;9 PM (Fri&ndash;Sat till 10 PM). Butter Chicken, Lamb Chops, Mango Lassi, Indian Coffee. Charge the car while you eat lunch &mdash; perfect timing! &#9742; +1 208-503-7944</div></div>
+          <div class="card-right"><div class="card-time">12:30 PM</div><div class="card-dur">1 hr</div></div>
+        </div>
+        <div class="card-links">
+          <a href="https://www.google.com/maps/dir/?api=1&destination=524+Main+St,+Lewiston,+ID+83501" target="_blank" class="lmap">&#128205; Directions</a>
+          <a href="https://themangotreerestaurants.com" target="_blank" class="lweb">&#127760; Website</a>
+        </div>
+      </div>
+    </div>
+    <div class="drive-conn"><span class="mi">59 mi &middot; ~1 hr</span> south on US-95</div>
+
+    <!-- Stop 5: White Bird Canyon -->
+    <div class="tl-row type-scenic">
+      <div class="tl-spine"><div class="tl-dot"></div><div class="tl-line"></div></div>
+      <div class="tl-card">
+        <div class="card-top">
+          <div><div class="card-name">&#127956; White Bird Canyon Viewpoint <span class="badge badge-free">FREE</span></div>
+          <div class="card-type">Scenic Drive-by &nbsp;&middot;&nbsp; White Bird, ID (US-95)</div>
+          <div class="card-notes">Dramatic switchback highway through canyon. Slow down and pull over for a quick photo &mdash; no hiking needed. Kids glued to the windows!</div></div>
+          <div class="card-right"><div class="card-time">1:30 PM</div><div class="card-dur">10 min</div></div>
+        </div>
+        <div class="card-links">
+          <a href="https://www.google.com/maps/dir/?api=1&destination=White+Bird+Canyon,+White+Bird,+ID+83554" target="_blank" class="lmap">&#128205; Directions</a>
+        </div>
+      </div>
+    </div>
+    <div class="drive-conn"><span class="mi">22 mi &middot; ~25 min</span></div>
+
+    <!-- Stop 6: Airbnb -->
+    <div class="tl-row type-home">
+      <div class="tl-spine"><div class="tl-dot"></div></div>
+      <div class="tl-card">
+        <div class="card-top">
+          <div><div class="card-name">&#127968; Check In &ndash; Airbnb, Meridian</div>
+          <div class="card-type">Overnight &nbsp;&middot;&nbsp; 3 Nights &nbsp;&middot;&nbsp; 6976 W Redwood Crk Dr, Meridian, ID 83646</div>
+          <div class="card-notes">Arrive with ~199 mi range. &#10003; Costco 3 mi away &mdash; perfect to stock up this evening!</div></div>
+          <div class="card-right"><div class="card-time">3:30 PM</div><div class="card-dur">3 nights</div><div class="charge-display"><span class="ch-before ok">199 mi</span></div></div>
+        </div>
+        <div class="card-links">
+          <a href="https://www.google.com/maps/dir/?api=1&destination=6976+W+Redwood+Crk+Dr,+Meridian,+ID+83646" target="_blank" class="lmap">&#128205; Directions</a>
         </div>
       </div>
     </div>
@@ -646,105 +495,163 @@ footer strong { color: var(--electric); }
 </div>
 </section>
 
-<!-- ══ DAY 2 ══ -->
-<section id="day2" class="day-section" style="border-top:1px solid var(--border);">
+<!-- ═══════════════ DAY 2 ═══════════════ -->
+<section id="day2" class="day-section d2s">
 <div class="container">
-  <div class="day-label d2">
-    <div class="day-num">02</div>
-    <div class="day-label-text">
-      <h3>Twin Falls Day Trip</h3>
-      <p>~238 mi round trip &nbsp;·&nbsp; 2 supercharger stops &nbsp;·&nbsp; Pre-charge + Twin Falls SC</p>
+  <div class="day-hdr">
+    <div class="day-num-badge">02</div>
+    <div class="day-hdr-text">
+      <h2>Twin Falls Day Trip &ndash; Waterfalls &amp; Wildlife</h2>
+      <p>~238 mi round trip &nbsp;&middot;&nbsp; Pre-charge + Twin Falls SC &nbsp;&middot;&nbsp; Back by 5:30 PM</p>
+      <div class="day-pills">
+        <span class="dpill dpill-sc">&#9889; Boise SC (pre-charge)</span>
+        <span class="dpill dpill-sc">&#9889; Twin Falls SC</span>
+        <span class="dpill dpill-indian">&#127859; Saffron Twin Falls</span>
+        <span class="dpill dpill-scenic">FREE Waterfalls</span>
+      </div>
     </div>
   </div>
+  <div class="timeline">
 
-  <div class="stop-list">
-
-    <div class="stop-row is-charger">
-      <div class="stop-dot"><div class="stop-dot-inner"></div><div class="stop-dot-line"></div></div>
-      <div class="stop-card">
-        <div class="stop-top">
-          <div>
-            <div class="stop-name">⚡ Supercharger — Boise, N Orchard St <span class="sc-badge">V3 · 250kW</span></div>
-            <div class="stop-type">Pre-Day 2 Charge · Only 10 mi from Airbnb</div>
-            <div class="stop-notes">851 N Orchard St, Boise, ID 83706. Next to Sonic Drive-In. Charge to full BEFORE starting the Twin Falls day trip. This is your PRIMARY charging hub for Days 2, 3 &amp; 4!</div>
-          </div>
-          <div class="stop-right">
-            <div class="stop-charge">
-              <span class="charge-before ok">189 mi</span>
-              <span class="charge-arrow">→</span>
-              <span class="charge-after">280 mi</span>
-            </div>
-            <div class="charge-time active">~25 min</div>
-          </div>
+    <!-- SC: Boise pre-charge -->
+    <div class="tl-row type-sc">
+      <div class="tl-spine"><div class="tl-dot"></div><div class="tl-line"></div></div>
+      <div class="tl-card">
+        <div class="card-top">
+          <div><div class="card-name">&#9889; SC: Boise &ndash; N Orchard St <span class="badge badge-sc">V3 &middot; 250kW &middot; 8 stalls</span></div>
+          <div class="card-type">Pre-Day 2 Charge &nbsp;&middot;&nbsp; 851 N Orchard St, Boise, ID 83706 &nbsp;&middot;&nbsp; Only 10 mi from Airbnb</div>
+          <div class="card-notes">Charge to full before the Twin Falls day trip. This is your PRIMARY charging hub for Days 2, 3 &amp; 4. Next to Sonic Drive-In.</div></div>
+          <div class="card-right"><div class="charge-display"><span class="ch-before ok">189 mi</span><span class="ch-arr">&rarr;</span><span class="ch-after">280 mi</span></div><div class="ch-time">~25 min</div></div>
         </div>
-        <div class="stop-links">
-          <a href="https://www.google.com/maps/dir/?api=1&destination=851+N+Orchard+St,+Boise,+ID+83706" target="_blank" class="link-map">📍 Directions</a>
-          <a href="https://www.tesla.com/findus/location/supercharger/18995" target="_blank" class="link-sc">⚡ Tesla.com</a>
+        <div class="card-links">
+          <a href="https://www.google.com/maps/dir/?api=1&destination=851+N+Orchard+St,+Boise,+ID+83706" target="_blank" class="lmap">&#128205; Directions</a>
+          <a href="https://www.tesla.com/findus/location/supercharger/18995" target="_blank" class="lsc">&#9889; Tesla.com</a>
         </div>
       </div>
     </div>
+    <div class="drive-conn"><span class="mi">95 mi &middot; ~1.5 hrs</span> south on I-84</div>
 
-    <div class="miles-conn"><span>95 mi · ~1.5 hrs</span> south on I-84</div>
-
-    <div class="stop-row">
-      <div class="stop-dot"><div class="stop-dot-inner"></div><div class="stop-dot-line"></div></div>
-      <div class="stop-card">
-        <div class="stop-top">
-          <div>
-            <div class="stop-name">Malad Gorge, Perrine Coulee, Shoshone Falls</div>
-            <div class="stop-type">Sightseeing · Twin Falls Area</div>
-            <div class="stop-notes">~143 mi from Airbnb to Twin Falls area. No charging needed here yet. Arrive with ~137 mi — comfortable for the next SC stop.</div>
-          </div>
-          <div class="stop-right">
-            <div class="stop-charge"><span class="charge-before ok">137 mi</span></div>
-            <div class="charge-time">~1:15 PM</div>
-          </div>
+    <div class="tl-row type-scenic">
+      <div class="tl-spine"><div class="tl-dot"></div><div class="tl-line"></div></div>
+      <div class="tl-card">
+        <div class="card-top">
+          <div><div class="card-name">Malad Gorge &ndash; Thousand Springs State Park</div><div class="card-type">Scenic / Kids &nbsp;&middot;&nbsp; Hagerman, ID</div>
+          <div class="card-notes">&#9733; 4.6 | $7/car (covers all Idaho state parks for the day). Stunning volcanic canyon, waterfall visible from bridge. No strenuous hiking needed.</div></div>
+          <div class="card-right"><div class="card-time">10:30 AM</div><div class="card-dur">45 min</div></div>
+        </div>
+        <div class="card-links">
+          <a href="https://www.google.com/maps/dir/?api=1&destination=2314+S+Ritchie+Rd,+Hagerman,+ID+83332" target="_blank" class="lmap">&#128205; Directions</a>
+          <a href="https://parksandrecreation.idaho.gov/parks/malad-gorge" target="_blank" class="lweb">&#127760; Idaho Parks</a>
         </div>
       </div>
     </div>
+    <div class="drive-conn"><span class="mi">35 mi &middot; ~35 min</span></div>
 
-    <div class="miles-conn"><span>2 mi</span> to Twin Falls SC</div>
-
-    <div class="stop-row is-charger">
-      <div class="stop-dot"><div class="stop-dot-inner"></div><div class="stop-dot-line"></div></div>
-      <div class="stop-card">
-        <div class="stop-top">
-          <div>
-            <div class="stop-name">⚡ Supercharger — Twin Falls, ID <span class="sc-badge">8 stalls · 150kW</span></div>
-            <div class="stop-type">Tesla Supercharger · Twin Falls, ID 83301 · 24/7</div>
-            <div class="stop-notes">Twin Falls, ID 83301. Charge here during your Saffron Indian lunch (★4.7) or Twin Falls Zoo visit. Brings you back to full for the 95 mi return to Meridian.</div>
-          </div>
-          <div class="stop-right">
-            <div class="stop-charge">
-              <span class="charge-before ok">135 mi</span>
-              <span class="charge-arrow">→</span>
-              <span class="charge-after">280 mi</span>
-            </div>
-            <div class="charge-time active">~35 min</div>
-          </div>
+    <div class="tl-row type-scenic">
+      <div class="tl-spine"><div class="tl-dot"></div><div class="tl-line"></div></div>
+      <div class="tl-card">
+        <div class="card-top">
+          <div><div class="card-name">Perrine Coulee Waterfall <span class="badge badge-free">FREE</span></div><div class="card-type">Scenic / Kids &nbsp;&middot;&nbsp; Twin Falls, ID</div>
+          <div class="card-notes">Walk BEHIND a 200-ft waterfall &mdash; kids love it! Easy 5&ndash;10 min walk from roadside parking. Rated 4.9&#9733;</div></div>
+          <div class="card-right"><div class="card-time">12:30 PM</div><div class="card-dur">30 min</div></div>
         </div>
-        <div class="stop-links">
-          <a href="https://www.google.com/maps/dir/?api=1&destination=Twin+Falls,+ID+83301" target="_blank" class="link-map">📍 Directions</a>
-          <a href="https://www.tesla.com/findus/location/supercharger/twinfallssupercharger" target="_blank" class="link-sc">⚡ Tesla.com</a>
+        <div class="card-links">
+          <a href="https://www.google.com/maps/dir/?api=1&destination=Perrine+Coulee+Waterfall,+Twin+Falls,+ID" target="_blank" class="lmap">&#128205; Directions</a>
         </div>
       </div>
     </div>
+    <div class="drive-conn"><span class="mi">5 mi &middot; ~8 min</span></div>
 
-    <div class="miles-conn"><span>95 mi · ~1.5 hrs</span> north on I-84 back to Meridian</div>
+    <div class="tl-row type-scenic">
+      <div class="tl-spine"><div class="tl-dot"></div><div class="tl-line"></div></div>
+      <div class="tl-card">
+        <div class="card-top">
+          <div><div class="card-name">Shoshone Falls Park</div><div class="card-type">Scenic / Kids &nbsp;&middot;&nbsp; Twin Falls, ID</div>
+          <div class="card-notes">&#9733; 4.8 | $5/car. &lsquo;Niagara of the West&rsquo; &mdash; 212 ft falls, taller than actual Niagara! Beautiful afternoon light. Space for kids to run.</div></div>
+          <div class="card-right"><div class="card-time">1:15 PM</div><div class="card-dur">45 min</div></div>
+        </div>
+        <div class="card-links">
+          <a href="https://www.google.com/maps/dir/?api=1&destination=4155+Shoshone+Falls+Grade+Rd,+Twin+Falls,+ID" target="_blank" class="lmap">&#128205; Directions</a>
+          <a href="https://www.tfid.org/index.aspx?NID=309" target="_blank" class="lweb">&#127760; tfid.org</a>
+        </div>
+      </div>
+    </div>
+    <div class="drive-conn"><span class="mi">3 mi &middot; ~5 min</span></div>
 
-    <div class="stop-row">
-      <div class="stop-dot"><div class="stop-dot-inner"></div></div>
-      <div class="stop-card">
-        <div class="stop-top">
-          <div>
-            <div class="stop-name">Return to Airbnb — Meridian</div>
-            <div class="stop-type">6976 W Redwood Crk Dr, Meridian, ID</div>
-            <div class="stop-notes">Arrive with ~185 mi range. ✅</div>
-          </div>
-          <div class="stop-right">
-            <div class="stop-charge"><span class="charge-before ok">185 mi</span></div>
-            <div class="charge-time">~5:30 PM</div>
-          </div>
+    <!-- Indian: Saffron + SC -->
+    <div class="tl-row type-indian">
+      <div class="tl-spine"><div class="tl-dot"></div><div class="tl-line"></div></div>
+      <div class="tl-card">
+        <div class="card-top">
+          <div><div class="card-name">&#127859; Saffron Twin Falls <span class="badge badge-indian">Indian Lunch</span><span class="badge badge-sc">&#9889; Charge nearby</span></div>
+          <div class="card-type">Indian Restaurant &nbsp;&middot;&nbsp; 117 Main Ave E, Twin Falls, ID 83301</div>
+          <div class="card-notes">&#9733; 4.7 | 481 reviews | &#127942; Idaho&rsquo;s Best Winner 2022, 5x Finalist! Methi Chicken, Butter Chicken, Chilli Cheese Naan. <strong style="color:var(--electric)">Charge at Twin Falls SC (2 mi away) during this lunch stop!</strong> &#9888; CLOSED Mon &amp; Sun. &#9742; +1 208-933-2580</div></div>
+          <div class="card-right"><div class="card-time">2:00 PM</div><div class="card-dur">1 hr</div></div>
+        </div>
+        <div class="card-links">
+          <a href="https://www.google.com/maps/dir/?api=1&destination=117+Main+Ave+E,+Twin+Falls,+ID+83301" target="_blank" class="lmap">&#128205; Directions</a>
+          <a href="https://www.saffronidaho.com" target="_blank" class="lweb">&#127760; saffronidaho.com</a>
+        </div>
+      </div>
+    </div>
+    <div class="drive-conn"><span class="mi">2 mi</span> to Twin Falls SC</div>
+
+    <!-- SC: Twin Falls -->
+    <div class="tl-row type-sc">
+      <div class="tl-spine"><div class="tl-dot"></div><div class="tl-line"></div></div>
+      <div class="tl-card">
+        <div class="card-top">
+          <div><div class="card-name">&#9889; SC: Twin Falls, ID <span class="badge badge-sc">8 stalls &middot; 150kW</span></div>
+          <div class="card-type">Tesla Supercharger &nbsp;&middot;&nbsp; Twin Falls, ID 83301 &nbsp;&middot;&nbsp; 24/7</div>
+          <div class="card-notes">Charge during lunch or Zoo visit. Brings you back to full for the 95 mi return to Meridian.</div></div>
+          <div class="card-right"><div class="charge-display"><span class="ch-before ok">135 mi</span><span class="ch-arr">&rarr;</span><span class="ch-after">280 mi</span></div><div class="ch-time">~35 min</div></div>
+        </div>
+        <div class="card-links">
+          <a href="https://www.google.com/maps/dir/?api=1&destination=Twin+Falls,+ID+83301" target="_blank" class="lmap">&#128205; Directions</a>
+          <a href="https://www.tesla.com/findus/location/supercharger/twinfallssupercharger" target="_blank" class="lsc">&#9889; Tesla.com</a>
+        </div>
+      </div>
+    </div>
+    <div class="drive-conn"><span class="mi">2 mi</span></div>
+
+    <div class="tl-row type-scenic">
+      <div class="tl-spine"><div class="tl-dot"></div><div class="tl-line"></div></div>
+      <div class="tl-card">
+        <div class="card-top">
+          <div><div class="card-name">Snake River Canyon Rim Trail <span class="badge badge-free">FREE</span></div><div class="card-type">Scenic Walk &nbsp;&middot;&nbsp; Twin Falls, ID</div>
+          <div class="card-notes">Beautiful paved trail with jaw-dropping Snake River views. Stroller-friendly. Views of Perrine Bridge. Rated 4.8&#9733;</div></div>
+          <div class="card-right"><div class="card-time">3:15 PM</div><div class="card-dur">30 min</div></div>
+        </div>
+        <div class="card-links">
+          <a href="https://www.google.com/maps/dir/?api=1&destination=Snake+River+Canyon+Rim+Trail,+Twin+Falls,+ID" target="_blank" class="lmap">&#128205; Directions</a>
+        </div>
+      </div>
+    </div>
+    <div class="drive-conn"><span class="mi">3 mi &middot; ~5 min</span></div>
+
+    <div class="tl-row">
+      <div class="tl-spine"><div class="tl-dot"></div><div class="tl-line"></div></div>
+      <div class="tl-card">
+        <div class="card-top">
+          <div><div class="card-name">Twin Falls Zoological Center</div><div class="card-type">Kids / Animals &nbsp;&middot;&nbsp; 1485 Pole Line Rd E, Twin Falls, ID</div>
+          <div class="card-notes">&#9733; 4.8 | Hidden gem in Magic Valley Mall! Feed turtles, tortoises &amp; fish. Touch tortoise shells. Young alligator interactions! ~$5&ndash;8/person. &#9742; +1 208-732-2702</div></div>
+          <div class="card-right"><div class="card-time">4:00 PM</div><div class="card-dur">1 hr</div></div>
+        </div>
+        <div class="card-links">
+          <a href="https://www.google.com/maps/dir/?api=1&destination=1485+Pole+Line+Rd+E,+Twin+Falls,+ID" target="_blank" class="lmap">&#128205; Directions</a>
+          <a href="https://www.tfzoologicalcenter.com" target="_blank" class="lweb">&#127760; Website</a>
+        </div>
+      </div>
+    </div>
+    <div class="drive-conn"><span class="mi">95 mi &middot; ~1.5 hrs</span> north on I-84</div>
+
+    <div class="tl-row type-home">
+      <div class="tl-spine"><div class="tl-dot"></div></div>
+      <div class="tl-card">
+        <div class="card-top">
+          <div><div class="card-name">Return to Airbnb &ndash; Meridian</div><div class="card-type">Drive Home</div>
+          <div class="card-notes">Arrive with ~185 mi range. &#10003;</div></div>
+          <div class="card-right"><div class="card-time">5:30 PM</div><div class="charge-display"><span class="ch-before ok">185 mi</span></div></div>
         </div>
       </div>
     </div>
@@ -753,191 +660,130 @@ footer strong { color: var(--electric); }
 </div>
 </section>
 
-<!-- ══ DAY 3 ══ -->
-<section id="day3" class="day-section" style="border-top:1px solid var(--border);">
+<!-- ═══════════════ DAY 3 ═══════════════ -->
+<section id="day3" class="day-section d3s">
 <div class="container">
-  <div class="day-label d3">
-    <div class="day-num">03</div>
-    <div class="day-label-text">
-      <h3>Boise Local Day — Zoo, Discovery, Trampoline</h3>
-      <p>~63 mi total &nbsp;·&nbsp; 1 supercharger stop (pre-charge only) &nbsp;·&nbsp; Easy day!</p>
-    </div>
-  </div>
-
-  <div class="stop-list">
-    <div class="stop-row is-charger">
-      <div class="stop-dot"><div class="stop-dot-inner"></div><div class="stop-dot-line"></div></div>
-      <div class="stop-card">
-        <div class="stop-top">
-          <div>
-            <div class="stop-name">⚡ Supercharger — Boise, N Orchard St <span class="sc-badge">V3 · 250kW</span></div>
-            <div class="stop-type">Pre-Day 3 Charge · Only 10 mi from Airbnb</div>
-            <div class="stop-notes">851 N Orchard St, Boise, ID 83706. Quick top-up before your local Boise day. Day 3 total is only ~63 miles — well within range. No other charging needed today!</div>
-          </div>
-          <div class="stop-right">
-            <div class="stop-charge">
-              <span class="charge-before ok">175 mi</span>
-              <span class="charge-arrow">→</span>
-              <span class="charge-after">280 mi</span>
-            </div>
-            <div class="charge-time active">~20 min</div>
-          </div>
-        </div>
-        <div class="stop-links">
-          <a href="https://www.google.com/maps/dir/?api=1&destination=851+N+Orchard+St,+Boise,+ID+83706" target="_blank" class="link-map">📍 Directions</a>
-          <a href="https://www.tesla.com/findus/location/supercharger/18995" target="_blank" class="link-sc">⚡ Tesla.com</a>
-        </div>
-      </div>
-    </div>
-
-    <div class="miles-conn"><span>63 mi total</span> local Boise driving</div>
-
-    <div class="stop-row">
-      <div class="stop-dot"><div class="stop-dot-inner"></div></div>
-      <div class="stop-card">
-        <div class="stop-top">
-          <div>
-            <div class="stop-name">Zoo Boise → Discovery Center → Bombay Grill → Fly High → Red Fort</div>
-            <div class="stop-type">Full Day Local · Boise / Meridian / Nampa</div>
-            <div class="stop-notes">No charging needed today. ✅ 63 mi total. Arrive home at ~8 PM with ~217 mi range. Pack bags tonight for Day 4 departure!</div>
-          </div>
-          <div class="stop-right">
-            <div class="stop-charge"><span class="charge-before ok">217 mi</span></div>
-            <div class="charge-time">~8:00 PM</div>
-          </div>
-        </div>
+  <div class="day-hdr">
+    <div class="day-num-badge">03</div>
+    <div class="day-hdr-text">
+      <h2>Boise &ndash; Zoo, Science &amp; Trampoline Day</h2>
+      <p>~63 mi total &nbsp;&middot;&nbsp; Pre-charge only &nbsp;&middot;&nbsp; Easy local day &nbsp;&middot;&nbsp; 2 Indian meals!</p>
+      <div class="day-pills">
+        <span class="dpill dpill-sc">&#9889; Boise SC (pre-charge)</span>
+        <span class="dpill dpill-indian">&#127859; Bombay Grill Lunch</span>
+        <span class="dpill dpill-indian">&#127859; Red Fort Dinner</span>
+        <span class="dpill dpill-kids">&#127784; Zoo &middot; Discovery &middot; Fly High</span>
       </div>
     </div>
   </div>
-</div>
-</section>
+  <div class="timeline">
 
-<!-- ══ DAY 4 ══ -->
-<section id="day4" class="day-section" style="border-top:1px solid var(--border);">
-<div class="container">
-  <div class="day-label d4">
-    <div class="day-num">04</div>
-    <div class="day-label-text">
-      <h3>Return Home — Meridian → Bellevue</h3>
-      <p>483 mi total &nbsp;·&nbsp; 3 supercharger stops &nbsp;·&nbsp; US-95 North → I-90 West</p>
-    </div>
-  </div>
-
-  <div class="stop-list">
-
-    <div class="stop-row is-charger">
-      <div class="stop-dot"><div class="stop-dot-inner"></div><div class="stop-dot-line"></div></div>
-      <div class="stop-card">
-        <div class="stop-top">
-          <div>
-            <div class="stop-name">⚡ Supercharger — Boise, N Orchard St <span class="sc-badge">V3 · 250kW</span></div>
-            <div class="stop-type">Pre-Day 4 Charge · Critical — Long Drive Day!</div>
-            <div class="stop-notes">851 N Orchard St, Boise, ID 83706. MUST charge to full before the 483-mile return journey. This is the last charger for 154 miles until Lewiston.</div>
-          </div>
-          <div class="stop-right">
-            <div class="stop-charge">
-              <span class="charge-before ok">207 mi</span>
-              <span class="charge-arrow">→</span>
-              <span class="charge-after">280 mi</span>
-            </div>
-            <div class="charge-time active">~20 min</div>
-          </div>
+    <div class="tl-row type-sc">
+      <div class="tl-spine"><div class="tl-dot"></div><div class="tl-line"></div></div>
+      <div class="tl-card">
+        <div class="card-top">
+          <div><div class="card-name">&#9889; SC: Boise &ndash; N Orchard St <span class="badge badge-sc">V3 &middot; 250kW &middot; 8 stalls</span></div>
+          <div class="card-type">Pre-Day 3 Charge &nbsp;&middot;&nbsp; 851 N Orchard St, Boise, ID 83706 &nbsp;&middot;&nbsp; 10 mi from Airbnb</div>
+          <div class="card-notes">Quick top-up before the local Boise day. Day 3 total is only ~63 miles &mdash; no other charging needed today!</div></div>
+          <div class="card-right"><div class="charge-display"><span class="ch-before ok">175 mi</span><span class="ch-arr">&rarr;</span><span class="ch-after">280 mi</span></div><div class="ch-time">~20 min</div></div>
         </div>
-        <div class="stop-links">
-          <a href="https://www.google.com/maps/dir/?api=1&destination=851+N+Orchard+St,+Boise,+ID+83706" target="_blank" class="link-map">📍 Directions</a>
-          <a href="https://www.tesla.com/findus/location/supercharger/18995" target="_blank" class="link-sc">⚡ Tesla.com</a>
+        <div class="card-links">
+          <a href="https://www.google.com/maps/dir/?api=1&destination=851+N+Orchard+St,+Boise,+ID+83706" target="_blank" class="lmap">&#128205; Directions</a>
+          <a href="https://www.tesla.com/findus/location/supercharger/18995" target="_blank" class="lsc">&#9889; Tesla.com</a>
         </div>
       </div>
     </div>
+    <div class="drive-conn"><span class="mi">19 mi &middot; ~28 min</span></div>
 
-    <div class="miles-conn"><span>154 mi · ~2.5 hrs</span> north on US-95</div>
-
-    <div class="stop-row is-charger">
-      <div class="stop-dot"><div class="stop-dot-inner"></div><div class="stop-dot-line"></div></div>
-      <div class="stop-card">
-        <div class="stop-top">
-          <div>
-            <div class="stop-name">⚡ Supercharger — Lewiston, ID <span class="sc-badge">V3 · 12 stalls</span> <span class="warn-badge">⚠ MUST CHARGE</span></div>
-            <div class="stop-type">Tesla Supercharger · WinCo Parking Lot · 24/7</div>
-            <div class="stop-notes">2001 17th St, Lewiston, ID 83501. Only ~126 mi left after the 154-mile US-95 drive — MUST charge here. Also a great lunch stop at The Mango Tree (★4.7) nearby!</div>
-          </div>
-          <div class="stop-right">
-            <div class="stop-charge">
-              <span class="charge-before">126 mi</span>
-              <span class="charge-arrow">→</span>
-              <span class="charge-after">280 mi</span>
-            </div>
-            <div class="charge-time active">~35 min</div>
-          </div>
+    <div class="tl-row">
+      <div class="tl-spine"><div class="tl-dot"></div><div class="tl-line"></div></div>
+      <div class="tl-card">
+        <div class="card-top">
+          <div><div class="card-name">Zoo Boise</div><div class="card-type">Kids &nbsp;&middot;&nbsp; 355 Julia Davis Dr, Boise, ID 83702</div>
+          <div class="card-notes">&#9733; 4.2 | $10&ndash;$14/person. Feed giraffes! &#128161; Visit on <strong>Thursday for just $3/person!</strong> Park once, walk to Discovery Center. Hours: 10 AM&ndash;5 PM.</div></div>
+          <div class="card-right"><div class="card-time">10:00 AM</div><div class="card-dur">2 hrs</div></div>
         </div>
-        <div class="stop-links">
-          <a href="https://www.google.com/maps/dir/?api=1&destination=2001+17th+St,+Lewiston,+ID+83501" target="_blank" class="link-map">📍 Directions</a>
-          <a href="https://www.tesla.com/findus/location/supercharger/19118" target="_blank" class="link-sc">⚡ Tesla.com</a>
+        <div class="card-links">
+          <a href="https://www.google.com/maps/dir/?api=1&destination=355+Julia+Davis+Dr,+Boise,+ID+83702" target="_blank" class="lmap">&#128205; Directions</a>
+          <a href="https://www.zooboise.org" target="_blank" class="lweb">&#127760; zooboise.org</a>
         </div>
       </div>
     </div>
+    <div class="drive-conn"><span class="mi">1 mi walk</span> within Julia Davis Park</div>
 
-    <div class="miles-conn"><span>115 mi · ~1.5 hrs</span> north on US-195 to Spokane</div>
-
-    <div class="stop-row is-charger">
-      <div class="stop-dot"><div class="stop-dot-inner"></div><div class="stop-dot-line"></div></div>
-      <div class="stop-card">
-        <div class="stop-top">
-          <div>
-            <div class="stop-name">⚡ Supercharger — Liberty Lake (Spokane) <span class="sc-badge">V4 · 250kW</span></div>
-            <div class="stop-type">Tesla Supercharger · 16 stalls · 24/7</div>
-            <div class="stop-notes">21728 E Mission Ave, Liberty Lake, WA 99019. Top up here — you have 210 miles left to Bellevue with a stop in Cle Elum. Cle Elum is 130 miles, then 80 miles home. Charge gives comfortable range to both stops.</div>
-          </div>
-          <div class="stop-right">
-            <div class="stop-charge">
-              <span class="charge-before ok">160 mi</span>
-              <span class="charge-arrow">→</span>
-              <span class="charge-after">280 mi</span>
-            </div>
-            <div class="charge-time active">~25 min</div>
-          </div>
+    <div class="tl-row">
+      <div class="tl-spine"><div class="tl-dot"></div><div class="tl-line"></div></div>
+      <div class="tl-card">
+        <div class="card-top">
+          <div><div class="card-name">Discovery Center of Idaho</div><div class="card-type">Kids / Science &nbsp;&middot;&nbsp; 131 W Myrtle St, Boise, ID 83702</div>
+          <div class="card-notes">&#9733; 4.4 | ~$10/person. Park once, visit both! Hands-on science &mdash; fossils, space, engineering, toddler zone. Kids 2&ndash;12 love every inch.</div></div>
+          <div class="card-right"><div class="card-time">12:15 PM</div><div class="card-dur">1.5 hrs</div></div>
         </div>
-        <div class="stop-links">
-          <a href="https://www.google.com/maps/dir/?api=1&destination=21728+E+Mission+Ave,+Liberty+Lake,+WA+99019" target="_blank" class="link-map">📍 Directions</a>
-          <a href="https://www.tesla.com/findus/location/supercharger/SpokaneWASupercharger" target="_blank" class="link-sc">⚡ Tesla.com</a>
+        <div class="card-links">
+          <a href="https://www.google.com/maps/dir/?api=1&destination=131+W+Myrtle+St,+Boise,+ID+83702" target="_blank" class="lmap">&#128205; Directions</a>
+          <a href="https://www.dcidaho.org" target="_blank" class="lweb">&#127760; dcidaho.org</a>
         </div>
       </div>
     </div>
+    <div class="drive-conn"><span class="mi">11 mi &middot; ~15 min</span></div>
 
-    <div class="miles-conn"><span>130 mi · ~2 hrs</span> west on I-90</div>
-
-    <div class="stop-row">
-      <div class="stop-dot"><div class="stop-dot-inner"></div><div class="stop-dot-line"></div></div>
-      <div class="stop-card">
-        <div class="stop-top">
-          <div>
-            <div class="stop-name">Wild Flora Bakery + City Park — Cle Elum</div>
-            <div class="stop-type">Rest Stop &amp; Snacks · 110 S Oakes Ave, Cle Elum, WA</div>
-            <div class="stop-notes">Arrive with ~150 mi. Relax with pastries, let kids run in the park. No charging needed here — 80 miles to Bellevue is easy from 150 mi range.</div>
-          </div>
-          <div class="stop-right">
-            <div class="stop-charge"><span class="charge-before ok">150 mi</span></div>
-            <div class="charge-time">~4:30 PM</div>
-          </div>
+    <div class="tl-row type-indian">
+      <div class="tl-spine"><div class="tl-dot"></div><div class="tl-line"></div></div>
+      <div class="tl-card">
+        <div class="card-top">
+          <div><div class="card-name">&#127859; Bombay Grill &ndash; Meridian <span class="badge badge-indian">Indian Lunch</span></div>
+          <div class="card-type">Indian Restaurant &nbsp;&middot;&nbsp; 2830 N Eagle Rd, Meridian, ID 83646</div>
+          <div class="card-notes">&#9733; 4.8 | Lunch buffet Tue&ndash;Sun 11 AM&ndash;2 PM (arrive by 1:30!). &#9888; CLOSED MONDAYS. Shahi Paneer, Garlic Naan, Mango Lassi. Veg-friendly. &#9742; +1 986-213-4001</div></div>
+          <div class="card-right"><div class="card-time">2:00 PM</div><div class="card-dur">1 hr</div></div>
+        </div>
+        <div class="card-links">
+          <a href="https://www.google.com/maps/dir/?api=1&destination=2830+N+Eagle+Rd,+Meridian,+ID+83646" target="_blank" class="lmap">&#128205; Directions</a>
+          <a href="https://www.bombaymeridian.com" target="_blank" class="lweb">&#127760; Website</a>
         </div>
       </div>
     </div>
+    <div class="drive-conn"><span class="mi">5 mi &middot; ~8 min</span></div>
 
-    <div class="miles-conn"><span>80 mi · ~1.5 hrs</span> west on I-90</div>
+    <div class="tl-row">
+      <div class="tl-spine"><div class="tl-dot"></div><div class="tl-line"></div></div>
+      <div class="tl-card">
+        <div class="card-top">
+          <div><div class="card-name">Fly High Trampoline Park</div><div class="card-type">Kids / Indoor &nbsp;&middot;&nbsp; 7672 W Fairview Ave, Boise, ID 83704</div>
+          <div class="card-notes">&#9733; 4.5 | ~$20/person. Great energy-burner after lunch! &#9888; CLOSED SUNDAYS. Mon &amp; Fri&ndash;Sat open 10 AM; Tue&ndash;Thu from 12 PM.</div></div>
+          <div class="card-right"><div class="card-time">3:30 PM</div><div class="card-dur">1.5 hrs</div></div>
+        </div>
+        <div class="card-links">
+          <a href="https://www.google.com/maps/dir/?api=1&destination=7672+W+Fairview+Ave,+Boise,+ID+83704" target="_blank" class="lmap">&#128205; Directions</a>
+          <a href="https://boise.flyhightrampolinepark.com" target="_blank" class="lweb">&#127760; Website</a>
+        </div>
+      </div>
+    </div>
+    <div class="drive-conn"><span class="mi">20 mi &middot; ~25 min</span></div>
 
-    <div class="stop-row">
-      <div class="stop-dot"><div class="stop-dot-inner"></div></div>
-      <div class="stop-card">
-        <div class="stop-top">
-          <div>
-            <div class="stop-name">🏠 Arrive Home — Bellevue, WA 🎉</div>
-            <div class="stop-type">Home!</div>
-            <div class="stop-notes">Arrive with ~70 mi range. ✅ Plug in at home overnight. Total Day 4 = ~483 miles. What a trip!</div>
-          </div>
-          <div class="stop-right">
-            <div class="stop-charge"><span class="charge-before ok">70 mi</span></div>
-            <div class="charge-time">~6:00 PM</div>
-          </div>
+    <div class="tl-row type-indian">
+      <div class="tl-spine"><div class="tl-dot"></div><div class="tl-line"></div></div>
+      <div class="tl-card">
+        <div class="card-top">
+          <div><div class="card-name">&#127859; Red Fort Cuisine &ndash; Nampa <span class="badge badge-indian">Indian Dinner</span></div>
+          <div class="card-type">Indian Restaurant &nbsp;&middot;&nbsp; 117 12th Ave S, Nampa, ID 83651</div>
+          <div class="card-notes">&#9733; 4.9 (highest-rated Indian in Treasure Valley!) | 4:30&ndash;9:30 PM (Fri&ndash;Sat till 10 PM). &#9888; CLOSED SUNDAYS. Only 8 mi from Airbnb! Mango Chicken, Tandoori, Garlic Naan. &#9742; +1 208-643-5621</div></div>
+          <div class="card-right"><div class="card-time">6:30 PM</div><div class="card-dur">1 hr</div></div>
+        </div>
+        <div class="card-links">
+          <a href="https://www.google.com/maps/dir/?api=1&destination=117+12th+Ave+S,+Nampa,+ID+83651" target="_blank" class="lmap">&#128205; Directions</a>
+          <a href="https://redfortcuisine.com" target="_blank" class="lweb">&#127760; Website</a>
+        </div>
+      </div>
+    </div>
+    <div class="drive-conn"><span class="mi">8 mi &middot; ~12 min</span></div>
+
+    <div class="tl-row type-home">
+      <div class="tl-spine"><div class="tl-dot"></div></div>
+      <div class="tl-card">
+        <div class="card-top">
+          <div><div class="card-name">Return to Airbnb</div><div class="card-type">Pack up tonight for Day 4 departure!</div>
+          <div class="card-notes">Arrive with ~217 mi range. &#10003; Great day!</div></div>
+          <div class="card-right"><div class="card-time">8:00 PM</div><div class="charge-display"><span class="ch-before ok">217 mi</span></div></div>
         </div>
       </div>
     </div>
@@ -946,240 +792,313 @@ footer strong { color: var(--electric); }
 </div>
 </section>
 
-<!-- ══ WARNING BOX ══ -->
-<section id="warning" style="border-top:1px solid var(--border); padding: 64px 0;">
+<!-- ═══════════════ DAY 4 ═══════════════ -->
+<section id="day4" class="day-section d4s">
 <div class="container">
+  <div class="day-hdr">
+    <div class="day-num-badge">04</div>
+    <div class="day-hdr-text">
+      <h2>Return Home &ndash; Meridian &rarr; Bellevue</h2>
+      <p>~483 mi &nbsp;&middot;&nbsp; Depart 9 AM &nbsp;&middot;&nbsp; US-95 North &rarr; I-90 West &nbsp;&middot;&nbsp; 3 SC stops</p>
+      <div class="day-pills">
+        <span class="dpill dpill-sc">&#9889; Boise SC (pre-charge)</span>
+        <span class="dpill dpill-sc">&#9889; Lewiston SC</span>
+        <span class="dpill dpill-sc">&#9889; Liberty Lake SC</span>
+        <span class="dpill dpill-indian">&#127859; Mango Tree Lewiston</span>
+        <span class="dpill dpill-scenic">Wild Flora Bakery</span>
+      </div>
+    </div>
+  </div>
+  <div class="timeline">
+
+    <div class="tl-row type-sc">
+      <div class="tl-spine"><div class="tl-dot"></div><div class="tl-line"></div></div>
+      <div class="tl-card">
+        <div class="card-top">
+          <div><div class="card-name">&#9889; SC: Boise &ndash; N Orchard St <span class="badge badge-sc">V3 &middot; 250kW</span></div>
+          <div class="card-type">Pre-Day 4 Charge &nbsp;&middot;&nbsp; Critical &mdash; Long Drive Day!</div>
+          <div class="card-notes">Charge to full before the 483-mile return home. This is the last charger for 154 miles until Lewiston. &#128161; Fill up gas in Nampa/Meridian before heading north too &mdash; sparse stations on US-95!</div></div>
+          <div class="card-right"><div class="charge-display"><span class="ch-before ok">207 mi</span><span class="ch-arr">&rarr;</span><span class="ch-after">280 mi</span></div><div class="ch-time">~20 min</div></div>
+        </div>
+        <div class="card-links">
+          <a href="https://www.google.com/maps/dir/?api=1&destination=851+N+Orchard+St,+Boise,+ID+83706" target="_blank" class="lmap">&#128205; Directions</a>
+          <a href="https://www.tesla.com/findus/location/supercharger/18995" target="_blank" class="lsc">&#9889; Tesla.com</a>
+        </div>
+      </div>
+    </div>
+    <div class="drive-conn"><span class="mi">154 mi &middot; ~2.5 hrs</span> north on US-95</div>
+
+    <!-- SC Lewiston + Indian Mango Tree -->
+    <div class="tl-row type-sc">
+      <div class="tl-spine"><div class="tl-dot"></div><div class="tl-line"></div></div>
+      <div class="tl-card">
+        <div class="card-top">
+          <div><div class="card-name">&#9889; SC: Lewiston, ID <span class="badge badge-sc">V3 &middot; 12 stalls</span><span class="badge badge-warn">&#9888; MUST CHARGE</span></div>
+          <div class="card-type">Tesla Supercharger &nbsp;&middot;&nbsp; 2001 17th St (WinCo), Lewiston, ID &nbsp;&middot;&nbsp; 24/7</div>
+          <div class="card-notes">Only ~126 mi left &mdash; must charge here. <strong style="color:var(--indian)">Perfect timing for The Mango Tree Indian lunch while charging!</strong></div></div>
+          <div class="card-right"><div class="charge-display"><span class="ch-before">126 mi</span><span class="ch-arr">&rarr;</span><span class="ch-after">280 mi</span></div><div class="ch-time">~35 min</div></div>
+        </div>
+        <div class="card-links">
+          <a href="https://www.google.com/maps/dir/?api=1&destination=2001+17th+St,+Lewiston,+ID+83501" target="_blank" class="lmap">&#128205; SC Directions</a>
+          <a href="https://www.tesla.com/findus/location/supercharger/19118" target="_blank" class="lsc">&#9889; Tesla.com</a>
+        </div>
+      </div>
+    </div>
+    <div class="drive-conn"><span class="mi">0 mi</span> same area</div>
+
+    <div class="tl-row type-indian">
+      <div class="tl-spine"><div class="tl-dot"></div><div class="tl-line"></div></div>
+      <div class="tl-card">
+        <div class="card-top">
+          <div><div class="card-name">&#127859; The Mango Tree &ndash; Lewiston (Lunch) <span class="badge badge-indian">Indian Lunch</span></div>
+          <div class="card-type">Indian Restaurant &nbsp;&middot;&nbsp; 524 Main St, Lewiston, ID 83501</div>
+          <div class="card-notes">&#9733; 4.7 | Open daily 11 AM&ndash;9 PM. Return lunch stop &mdash; try Lamb Chops or Indian Coffee if you missed them on Day 1! Great Idaho send-off meal. &#9742; +1 208-503-7944</div></div>
+          <div class="card-right"><div class="card-time">11:30 AM</div><div class="card-dur">1 hr</div></div>
+        </div>
+        <div class="card-links">
+          <a href="https://www.google.com/maps/dir/?api=1&destination=524+Main+St,+Lewiston,+ID+83501" target="_blank" class="lmap">&#128205; Directions</a>
+          <a href="https://themangotreerestaurants.com" target="_blank" class="lweb">&#127760; Website</a>
+        </div>
+      </div>
+    </div>
+    <div class="drive-conn"><span class="mi">5 mi &middot; ~5 min</span></div>
+
+    <div class="tl-row type-scenic">
+      <div class="tl-spine"><div class="tl-dot"></div><div class="tl-line"></div></div>
+      <div class="tl-card">
+        <div class="card-top">
+          <div><div class="card-name">Lewiston Hill Overlook <span class="badge badge-free">FREE</span></div><div class="card-type">Scenic &nbsp;&middot;&nbsp; Genesee, ID</div>
+          <div class="card-notes">Stunning northbound canyon view. Last Idaho photo stop before the final push home. Rated 4.8&#9733;</div></div>
+          <div class="card-right"><div class="card-time">12:45 PM</div><div class="card-dur">10 min</div></div>
+        </div>
+        <div class="card-links">
+          <a href="https://www.google.com/maps/dir/?api=1&destination=Lewiston+Hill+Overlook,+Genesee,+ID+83832" target="_blank" class="lmap">&#128205; Directions</a>
+        </div>
+      </div>
+    </div>
+    <div class="drive-conn"><span class="mi">90 mi &middot; ~1.5 hrs</span> north on US-195</div>
+
+    <!-- SC: Liberty Lake Day 4 -->
+    <div class="tl-row type-sc">
+      <div class="tl-spine"><div class="tl-dot"></div><div class="tl-line"></div></div>
+      <div class="tl-card">
+        <div class="card-top">
+          <div><div class="card-name">&#9889; SC: Liberty Lake (Spokane) <span class="badge badge-sc">V4 &middot; 250kW &middot; 16 stalls</span></div>
+          <div class="card-type">Tesla Supercharger &nbsp;&middot;&nbsp; 21728 E Mission Ave, Liberty Lake, WA 99019 &nbsp;&middot;&nbsp; 24/7</div>
+          <div class="card-notes">Top up here &mdash; 210 miles left to Bellevue with stops. Cle Elum is 130 miles, then 80 home. Comfortable all the way.</div></div>
+          <div class="card-right"><div class="charge-display"><span class="ch-before ok">160 mi</span><span class="ch-arr">&rarr;</span><span class="ch-after">280 mi</span></div><div class="ch-time">~25 min</div></div>
+        </div>
+        <div class="card-links">
+          <a href="https://www.google.com/maps/dir/?api=1&destination=21728+E+Mission+Ave,+Liberty+Lake,+WA+99019" target="_blank" class="lmap">&#128205; Directions</a>
+          <a href="https://www.tesla.com/findus/location/supercharger/SpokaneWASupercharger" target="_blank" class="lsc">&#9889; Tesla.com</a>
+        </div>
+      </div>
+    </div>
+    <div class="drive-conn"><span class="mi">130 mi &middot; ~2 hrs</span> west on I-90</div>
+
+    <div class="tl-row">
+      <div class="tl-spine"><div class="tl-dot"></div><div class="tl-line"></div></div>
+      <div class="tl-card">
+        <div class="card-top">
+          <div><div class="card-name">&#127855; Cle Elum &ndash; Wild Flora Bakery + City Park</div>
+          <div class="card-type">Food + Kids Break &nbsp;&middot;&nbsp; 110 S Oakes Ave, Cle Elum, WA 98922</div>
+          <div class="card-notes">&#9733; 4.8 | Opens 8 AM. Amazing pastries, ube latte, veg &amp; vegan options, GF-friendly! Lemon blackberry bar, feta &amp; spinach pastry. Cle Elum City Park is 2 min walk &mdash; let kids run before the final 80 mi home! &#9742; +1 509-519-4567</div></div>
+          <div class="card-right"><div class="card-time">4:30 PM</div><div class="card-dur">30 min</div></div>
+        </div>
+        <div class="card-links">
+          <a href="https://www.google.com/maps/dir/?api=1&destination=110+S+Oakes+Ave,+Cle+Elum,+WA+98922" target="_blank" class="lmap">&#128205; Directions</a>
+          <a href="https://www.instagram.com/thewildflorabakery/" target="_blank" class="lweb">&#127760; @thewildflorabakery</a>
+        </div>
+      </div>
+    </div>
+    <div class="drive-conn"><span class="mi">80 mi &middot; ~1.5 hrs</span> west on I-90</div>
+
+    <div class="tl-row type-home">
+      <div class="tl-spine"><div class="tl-dot"></div></div>
+      <div class="tl-card">
+        <div class="card-top">
+          <div><div class="card-name">&#127881; Arrive Home &ndash; Bellevue, WA!</div><div class="card-type">Home!</div>
+          <div class="card-notes">Arrive with ~70 mi range. &#10003; Plug in at home overnight. Total Day 4 = ~483 miles. What a trip!</div></div>
+          <div class="card-right"><div class="card-time">~6:00 PM</div><div class="charge-display"><span class="ch-before ok">70 mi</span></div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Gap Warning -->
   <div class="warn-box">
-    <div class="warn-box-title">⚠ Critical Gap — US-95 Corridor</div>
-    <p>The <strong>US-95 corridor from Lewiston, ID to Meridian (Boise area)</strong> has <strong>zero Tesla Superchargers</strong> for 81 miles through White Bird Canyon. This is a remote, mountainous stretch with no urban charging infrastructure.</p>
-    <br>
-    <p><strong>Day 1:</strong> Always charge to FULL at Lewiston SC before heading south on US-95. Arrive Meridian with ~199 mi — comfortable.</p>
-    <p style="margin-top:8px"><strong>Day 4:</strong> Charge fully at Boise SC before departing north. You'll have 280 mi when you leave — the 154 miles to Lewiston will leave you at ~126 mi, so the Lewiston SC stop is mandatory on the return trip.</p>
+    <div class="warn-title">&#9888; Critical Gap &mdash; US-95 Corridor</div>
+    <p>The US-95 corridor from <strong>Lewiston, ID to Meridian</strong> has <strong>zero Tesla Superchargers</strong> for 81 miles. Always charge to FULL at Lewiston SC before heading south (Day 1) and before heading north (Day 4). The Lewiston SC stop is mandatory on both days.</p>
+  </div>
+
+</div>
+</section>
+
+<!-- ═══════════════ INDIAN RESTAURANTS ═══════════════ -->
+<section id="restaurants" class="indian-section">
+<div class="container">
+  <div class="sec-hdr">
+    <span class="sec-tag">&#127859; Indian Food on Route</span>
+    <h2>4 Authentic Indian Meals</h2>
+    <p>All pre-researched, highly rated and perfectly timed with Tesla charging stops</p>
+  </div>
+  <div class="indian-grid">
+    <div class="icard">
+      <span class="icard-tag">Days 1 &amp; 4 &nbsp;&middot;&nbsp; Charge while you eat!</span>
+      <div class="icard-name">The Mango Tree</div>
+      <div class="icard-city">524 Main St, Lewiston, ID</div>
+      <div class="icard-rating">4.7&#9733;</div>
+      <div class="icard-hours">Mon&ndash;Thu: 11 AM&ndash;9 PM<br>Fri&ndash;Sat: 11 AM&ndash;10 PM &nbsp;&middot;&nbsp; Sun: 11 AM&ndash;9 PM<br>&#9742; +1 208-503-7944</div>
+      <div class="icard-dishes">Butter Chicken &middot; Lamb Chops &middot; Mango Lassi &middot; Indian Coffee</div>
+      <div class="icard-link"><a href="https://themangotreerestaurants.com" target="_blank">&#127760; Website</a></div>
+    </div>
+    <div class="icard">
+      <span class="icard-tag">Day 2 &nbsp;&middot;&nbsp; &#9889; Charge at Twin Falls SC nearby</span>
+      <div class="icard-name">Saffron Twin Falls</div>
+      <div class="icard-city">117 Main Ave E, Twin Falls, ID</div>
+      <div class="icard-rating">4.7&#9733; &#127942;</div>
+      <div class="icard-hours">Tue&ndash;Sat: 11 AM&ndash;8:30 PM<br>(Fri&ndash;Sat till 9 PM) &nbsp;&middot;&nbsp; &#9742; +1 208-933-2580</div>
+      <div class="icard-closed">&#9888; Closed Monday &amp; Sunday</div>
+      <div class="icard-dishes">Methi Chicken &middot; Butter Chicken &middot; Chilli Cheese Naan &middot; Idaho&rsquo;s Best 2022</div>
+      <div class="icard-link"><a href="https://www.saffronidaho.com" target="_blank">&#127760; Website</a></div>
+    </div>
+    <div class="icard">
+      <span class="icard-tag">Day 3 Lunch</span>
+      <div class="icard-name">Bombay Grill</div>
+      <div class="icard-city">2830 N Eagle Rd, Meridian, ID</div>
+      <div class="icard-rating">4.8&#9733;</div>
+      <div class="icard-hours">Tue&ndash;Sun: Lunch 11 AM&ndash;2 PM<br>Dinner 5&ndash;9 PM &nbsp;&middot;&nbsp; &#9742; +1 986-213-4001</div>
+      <div class="icard-closed">&#9888; Closed Mondays</div>
+      <div class="icard-dishes">Shahi Paneer &middot; Garlic Naan &middot; Mango Lassi &middot; Veg-friendly</div>
+      <div class="icard-link"><a href="https://www.bombaymeridian.com" target="_blank">&#127760; Website</a></div>
+    </div>
+    <div class="icard">
+      <span class="icard-tag">Day 3 Dinner</span>
+      <div class="icard-name">Red Fort Cuisine</div>
+      <div class="icard-city">117 12th Ave S, Nampa, ID</div>
+      <div class="icard-rating">4.9&#9733; &#11088;</div>
+      <div class="icard-hours">Mon&ndash;Sat: 11:30 AM&ndash;2:30 PM<br>&amp; 4:30&ndash;9:30 PM &nbsp;&middot;&nbsp; &#9742; +1 208-643-5621</div>
+      <div class="icard-closed">&#9888; Closed Sundays &nbsp;&middot;&nbsp; Only 8 mi from Airbnb!</div>
+      <div class="icard-dishes">Mango Chicken &middot; Chicken Tandoori &middot; Garlic Naan</div>
+      <div class="icard-link"><a href="https://redfortcuisine.com" target="_blank">&#127760; Website</a></div>
+    </div>
   </div>
 </div>
 </section>
 
-<!-- ══ SC DIRECTORY ══ -->
-<section id="directory" class="section" style="border-top:1px solid var(--border);">
+<!-- ═══════════════ MAPS ═══════════════ -->
+<section id="gmaps" class="maps-section">
 <div class="container">
-  <div class="section-header">
-    <span class="section-tag">⚡ Station Reference</span>
-    <h2>Supercharger Directory</h2>
-    <p>All 8 stations on your route — with addresses, specs and direct links</p>
+  <div class="sec-hdr">
+    <span class="sec-tag">&#128506; Navigation</span>
+    <h2>Day-by-Day Google Maps Routes</h2>
+    <p>Click any card to open the full route in Google Maps with all stops in order</p>
   </div>
-
-  <div class="sc-grid">
-
-    <div class="sc-card">
-      <span class="sc-num">SC-01 · Day 1 &amp; Day 4</span>
-      <div class="sc-name">Moses Lake, WA</div>
-      <div class="sc-addr">2709 W Broadway Ave<br>Moses Lake, WA 98837</div>
-      <div class="sc-specs">
-        <span class="spec-pill spec-power">250kW V3</span>
-        <span class="spec-pill spec-stalls">12 stalls</span>
-        <span class="spec-pill spec-note">24/7</span>
-        <span class="spec-pill spec-note">Open to all EVs</span>
-      </div>
-      <div class="sc-links">
-        <a href="https://www.google.com/maps/dir/?api=1&destination=2709+W+Broadway+Ave,+Moses+Lake,+WA+98837" target="_blank" class="link-map" style="font-size:0.6rem">📍 Directions</a>
-        <a href="https://www.tesla.com/findus/location/supercharger/moseslakesupercharger" target="_blank" class="link-sc" style="font-size:0.6rem">⚡ Tesla.com</a>
-      </div>
-    </div>
-
-    <div class="sc-card">
-      <span class="sc-num">SC-02 · Day 1 &amp; Day 4</span>
-      <div class="sc-name">Liberty Lake (Spokane), WA</div>
-      <div class="sc-addr">21728 E Mission Ave<br>Liberty Lake, WA 99019</div>
-      <div class="sc-specs">
-        <span class="spec-pill spec-power">250kW V4</span>
-        <span class="spec-pill spec-stalls">16 stalls</span>
-        <span class="spec-pill spec-note">24/7</span>
-        <span class="spec-pill spec-note">Tesla Service On Site</span>
-      </div>
-      <div class="sc-links">
-        <a href="https://www.google.com/maps/dir/?api=1&destination=21728+E+Mission+Ave,+Liberty+Lake,+WA+99019" target="_blank" class="link-map" style="font-size:0.6rem">📍 Directions</a>
-        <a href="https://www.tesla.com/findus/location/supercharger/SpokaneWASupercharger" target="_blank" class="link-sc" style="font-size:0.6rem">⚡ Tesla.com</a>
-      </div>
-    </div>
-
-    <div class="sc-card critical">
-      <span class="sc-num" style="color:var(--warn)">SC-03 · Day 1 &amp; Day 4 · CRITICAL</span>
-      <div class="sc-name">Lewiston, ID</div>
-      <div class="sc-addr">2001 17th St (WinCo Parking Lot)<br>Lewiston, ID 83501</div>
-      <div class="sc-specs">
-        <span class="spec-pill spec-power">V3 · Fast</span>
-        <span class="spec-pill spec-stalls">12 stalls</span>
-        <span class="spec-pill spec-note">24/7</span>
-        <span class="spec-pill spec-warn">Last SC before Meridian!</span>
-      </div>
-      <div class="sc-links">
-        <a href="https://www.google.com/maps/dir/?api=1&destination=2001+17th+St,+Lewiston,+ID+83501" target="_blank" class="link-map" style="font-size:0.6rem">📍 Directions</a>
-        <a href="https://www.tesla.com/findus/location/supercharger/19118" target="_blank" class="link-sc" style="font-size:0.6rem">⚡ Tesla.com</a>
-      </div>
-    </div>
-
-    <div class="sc-card">
-      <span class="sc-num" style="color:var(--ok)">SC-04 · Days 2, 3 &amp; 4 · PRIMARY HUB</span>
-      <div class="sc-name">Boise, ID — N Orchard St</div>
-      <div class="sc-addr">851 N Orchard St (Sonic Drive-In)<br>Boise, ID 83706</div>
-      <div class="sc-specs">
-        <span class="spec-pill spec-power">250kW V3</span>
-        <span class="spec-pill spec-stalls">8 stalls</span>
-        <span class="spec-pill spec-note">24/7</span>
-        <span class="spec-pill spec-note">~10 mi from Airbnb</span>
-      </div>
-      <div class="sc-links">
-        <a href="https://www.google.com/maps/dir/?api=1&destination=851+N+Orchard+St,+Boise,+ID+83706" target="_blank" class="link-map" style="font-size:0.6rem">📍 Directions</a>
-        <a href="https://www.tesla.com/findus/location/supercharger/18995" target="_blank" class="link-sc" style="font-size:0.6rem">⚡ Tesla.com</a>
-      </div>
-    </div>
-
-    <div class="sc-card">
-      <span class="sc-num">SC-05 · Day 2</span>
-      <div class="sc-name">Twin Falls, ID</div>
-      <div class="sc-addr">Twin Falls, ID 83301<br>(Downtown area)</div>
-      <div class="sc-specs">
-        <span class="spec-pill spec-power">150kW V2</span>
-        <span class="spec-pill spec-stalls">8 stalls</span>
-        <span class="spec-pill spec-note">24/7</span>
-      </div>
-      <div class="sc-links">
-        <a href="https://www.google.com/maps/dir/?api=1&destination=Twin+Falls,+ID+83301" target="_blank" class="link-map" style="font-size:0.6rem">📍 Directions</a>
-        <a href="https://www.tesla.com/findus/location/supercharger/twinfallssupercharger" target="_blank" class="link-sc" style="font-size:0.6rem">⚡ Tesla.com</a>
-      </div>
-    </div>
-
-    <div class="sc-card">
-      <span class="sc-num">SC-06 · Boise Backup</span>
-      <div class="sc-name">Boise, ID — Entertainment Ave</div>
-      <div class="sc-addr">1426 S Entertainment Ave (Oxford Suites)<br>Boise, ID 83709</div>
-      <div class="sc-specs">
-        <span class="spec-pill spec-power">150kW V2</span>
-        <span class="spec-pill spec-stalls">8 stalls</span>
-        <span class="spec-pill spec-note">24/7</span>
-        <span class="spec-pill spec-warn">Backup — use N Orchard first</span>
-      </div>
-      <div class="sc-links">
-        <a href="https://www.google.com/maps/dir/?api=1&destination=1426+S+Entertainment+Ave,+Boise,+ID+83709" target="_blank" class="link-map" style="font-size:0.6rem">📍 Directions</a>
-        <a href="https://www.tesla.com/findus/location/supercharger/boisesupercharger" target="_blank" class="link-sc" style="font-size:0.6rem">⚡ Tesla.com</a>
-      </div>
-    </div>
-
-    <div class="sc-card">
-      <span class="sc-num">SC-07 · Spokane Backup</span>
-      <div class="sc-name">Spokane, WA — TA Petro</div>
-      <div class="sc-addr">10506 W Aero Rd (TA Petro truck stop)<br>Spokane, WA 99224</div>
-      <div class="sc-specs">
-        <span class="spec-pill spec-power">250kW V3</span>
-        <span class="spec-pill spec-stalls">8 stalls</span>
-        <span class="spec-pill spec-note">24/7</span>
-        <span class="spec-pill spec-warn">Backup if Liberty Lake busy</span>
-      </div>
-      <div class="sc-links">
-        <a href="https://www.google.com/maps/dir/?api=1&destination=10506+W+Aero+Rd,+Spokane,+WA+99224" target="_blank" class="link-map" style="font-size:0.6rem">📍 Directions</a>
-        <a href="https://www.tesla.com/findus/location/supercharger/spokanewashingsupercharger" target="_blank" class="link-sc" style="font-size:0.6rem">⚡ Tesla.com</a>
-      </div>
-    </div>
-
-    <div class="sc-card">
-      <span class="sc-num">SC-08 · Day 4 Optional</span>
-      <div class="sc-name">Ellensburg, WA</div>
-      <div class="sc-addr">1500 Canyon Rd (SureStay Hotel)<br>Ellensburg, WA 98926</div>
-      <div class="sc-specs">
-        <span class="spec-pill spec-power">120kW V2</span>
-        <span class="spec-pill spec-stalls">5 stalls</span>
-        <span class="spec-pill spec-note">24/7</span>
-        <span class="spec-pill spec-warn">Optional — only if needed</span>
-      </div>
-      <div class="sc-links">
-        <a href="https://www.google.com/maps/dir/?api=1&destination=1500+Canyon+Rd,+Ellensburg,+WA+98926" target="_blank" class="link-map" style="font-size:0.6rem">📍 Directions</a>
-        <a href="https://www.tesla.com/findus/location/supercharger/ellensburgwasupercharger" target="_blank" class="link-sc" style="font-size:0.6rem">⚡ Tesla.com</a>
-      </div>
-    </div>
-
+  <div class="map-grid">
+    <a href="https://www.google.com/maps/dir/Bellevue,+WA/Mom+and+Pops+Diner,+805+W+Broadway+Ave,+Moses+Lake,+WA+98837/Spokane,+WA/The+Mango+Tree,+524+Main+St,+Lewiston,+ID+83501/White+Bird+Canyon,+White+Bird,+ID+83554/6976+W+Redwood+Crk+Dr,+Meridian,+ID+83646" target="_blank" class="mcard mc1">
+      <div class="mcard-label">Day 1</div>
+      <div class="mcard-title">Bellevue &rarr; Moses Lake &rarr; Spokane &rarr; Mango Tree Lewiston &rarr; White Bird &rarr; Meridian</div>
+      <div class="mcard-cta">Open in Maps &rarr;</div>
+    </a>
+    <a href="https://www.google.com/maps/dir/6976+W+Redwood+Crk+Dr,+Meridian,+ID+83646/Malad+Gorge+State+Park,+2314+S+Ritchie+Rd,+Hagerman,+ID+83332/Perrine+Coulee+Waterfall,+Twin+Falls,+ID+83301/Shoshone+Falls+Park,+4155+Shoshone+Falls+Grade+Rd,+Twin+Falls,+ID+83301/Saffron+Twin+Falls,+117+Main+Ave+E,+Twin+Falls,+ID+83301/Snake+River+Canyon+Rim+Trail,+Twin+Falls,+ID+83301/Twin+Falls+Zoological+Center,+1485+Pole+Line+Rd+E,+Twin+Falls,+ID+83301/6976+W+Redwood+Crk+Dr,+Meridian,+ID+83646" target="_blank" class="mcard mc2">
+      <div class="mcard-label">Day 2</div>
+      <div class="mcard-title">Meridian &rarr; Malad Gorge &rarr; Waterfalls &rarr; Saffron Lunch &rarr; Canyon Rim &rarr; Zoo &rarr; Home</div>
+      <div class="mcard-cta">Open in Maps &rarr;</div>
+    </a>
+    <a href="https://www.google.com/maps/dir/6976+W+Redwood+Crk+Dr,+Meridian,+ID+83646/Zoo+Boise,+355+Julia+Davis+Dr,+Boise,+ID+83702/Discovery+Center+of+Idaho,+131+W+Myrtle+St,+Boise,+ID+83702/Bombay+Grill,+2830+N+Eagle+Rd,+Meridian,+ID+83646/Fly+High+Boise,+7672+W+Fairview+Ave,+Boise,+ID+83704/Red+Fort+Cuisine,+117+12th+Ave+S,+Nampa,+ID+83651/6976+W+Redwood+Crk+Dr,+Meridian,+ID+83646" target="_blank" class="mcard mc3">
+      <div class="mcard-label">Day 3</div>
+      <div class="mcard-title">Meridian &rarr; Zoo &rarr; Discovery &rarr; Bombay Grill &rarr; Fly High &rarr; Red Fort Nampa &rarr; Home</div>
+      <div class="mcard-cta">Open in Maps &rarr;</div>
+    </a>
+    <a href="https://www.google.com/maps/dir/6976+W+Redwood+Crk+Dr,+Meridian,+ID+83646/The+Mango+Tree,+524+Main+St,+Lewiston,+ID+83501/Lewiston+Hill+Overlook,+Genesee,+ID+83832/Spokane,+WA/Wild+Flora+Bakery,+110+S+Oakes+Ave,+Cle+Elum,+WA+98922/Bellevue,+WA" target="_blank" class="mcard mc4">
+      <div class="mcard-label">Day 4</div>
+      <div class="mcard-title">Meridian &rarr; Mango Tree Lewiston &rarr; Overlook &rarr; Spokane &rarr; Wild Flora Cle Elum &rarr; Bellevue</div>
+      <div class="mcard-cta">Open in Maps &rarr;</div>
+    </a>
   </div>
 </div>
 </section>
 
-<!-- ══ SUMMARY TABLE ══ -->
-<section id="summary" class="section" style="border-top:1px solid var(--border);">
+<!-- ═══════════════ STORES ═══════════════ -->
+<section id="stores" class="stores-section">
 <div class="container">
-  <div class="section-header">
-    <span class="section-tag">📊 At a Glance</span>
-    <h2>Full Charging Summary</h2>
-    <p>All 9 supercharger stops across 4 days — sorted by day</p>
+  <div class="sec-hdr">
+    <span class="sec-tag">&#128722; Nearby Stores</span>
+    <h2>Costco &amp; Fred Meyer</h2>
+    <p>Both very close to your Airbnb &mdash; stock up on arrival evening</p>
   </div>
-
-  <div style="overflow-x:auto; border:1px solid var(--border); border-radius:var(--radius); background:var(--panel);">
-    <table class="summary-table">
-      <thead>
-        <tr>
-          <th>Day</th>
-          <th>Supercharger</th>
-          <th>Miles from Prev</th>
-          <th>Before</th>
-          <th>After</th>
-          <th>Est. Time</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td class="td-day" style="color:var(--d1)">Day 1</td><td class="td-sc">⚡ Moses Lake, WA</td><td>180 mi</td><td class="td-before warn">100 mi ⚠</td><td class="td-after">270 mi</td><td class="td-time">~30 min</td></tr>
-        <tr><td class="td-day" style="color:var(--d1)">Day 1</td><td class="td-sc">⚡ Liberty Lake (Spokane), WA</td><td>93 mi</td><td class="td-before ok">175 mi</td><td class="td-after">280 mi</td><td class="td-time">~20 min</td></tr>
-        <tr><td class="td-day" style="color:var(--d1)">Day 1</td><td class="td-sc">⚡ Lewiston, ID</td><td>110 mi</td><td class="td-before ok">170 mi</td><td class="td-after">280 mi</td><td class="td-time">~20 min</td></tr>
-        <tr style="border-top:1px solid rgba(255,255,255,0.08)"><td class="td-day" style="color:var(--d2)">Day 2</td><td class="td-sc">⚡ Boise – N Orchard (pre-charge)</td><td>10 mi</td><td class="td-before ok">189 mi</td><td class="td-after">280 mi</td><td class="td-time">~25 min</td></tr>
-        <tr><td class="td-day" style="color:var(--d2)">Day 2</td><td class="td-sc">⚡ Twin Falls, ID</td><td>143 mi</td><td class="td-before ok">135 mi</td><td class="td-after">280 mi</td><td class="td-time">~35 min</td></tr>
-        <tr style="border-top:1px solid rgba(255,255,255,0.08)"><td class="td-day" style="color:var(--d3)">Day 3</td><td class="td-sc">⚡ Boise – N Orchard (pre-charge)</td><td>10 mi</td><td class="td-before ok">175 mi</td><td class="td-after">280 mi</td><td class="td-time">~20 min</td></tr>
-        <tr style="border-top:1px solid rgba(255,255,255,0.08)"><td class="td-day" style="color:var(--d4)">Day 4</td><td class="td-sc">⚡ Boise – N Orchard (pre-charge)</td><td>10 mi</td><td class="td-before ok">207 mi</td><td class="td-after">280 mi</td><td class="td-time">~20 min</td></tr>
-        <tr><td class="td-day" style="color:var(--d4)">Day 4</td><td class="td-sc">⚡ Lewiston, ID</td><td>154 mi</td><td class="td-before warn">126 mi ⚠</td><td class="td-after">280 mi</td><td class="td-time">~35 min</td></tr>
-        <tr><td class="td-day" style="color:var(--d4)">Day 4</td><td class="td-sc">⚡ Liberty Lake (Spokane), WA</td><td>115 mi</td><td class="td-before ok">160 mi</td><td class="td-after">280 mi</td><td class="td-time">~25 min</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-top:32px;">
-    <div style="background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:20px;text-align:center;">
-      <div style="font-family:'Space Mono',monospace;font-size:1.8rem;color:var(--electric);font-weight:700">9</div>
-      <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-top:4px">Total SC Stops</div>
+  <div class="store-grid">
+    <div class="store-card costco">
+      <div class="store-name">&#127981; Costco Wholesale</div>
+      <div class="store-dist">~3 mi &nbsp;&middot;&nbsp; ~5 min from Airbnb</div>
+      <div class="store-info">3403 W Chinden Blvd, Meridian, ID 83646<br>Mon&ndash;Fri: 10 AM&ndash;8:30 PM &nbsp;&middot;&nbsp; Sat: 9:30 AM&ndash;7 PM<br>Sun: 10 AM&ndash;6 PM &nbsp;&middot;&nbsp; &#9742; +1 986-200-4136</div>
+      <div class="card-links">
+        <a href="https://www.google.com/maps/dir/?api=1&destination=3403+W+Chinden+Blvd,+Meridian,+ID+83646" target="_blank" class="lmap">&#128205; Directions</a>
+        <a href="https://www.costco.com/warehouse-locations/meridian-id-1262.html" target="_blank" class="lweb">&#127760; costco.com</a>
+      </div>
     </div>
-    <div style="background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:20px;text-align:center;">
-      <div style="font-family:'Space Mono',monospace;font-size:1.8rem;color:var(--gold);font-weight:700">~2.5 hrs</div>
-      <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-top:4px">Total Charge Time</div>
-    </div>
-    <div style="background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:20px;text-align:center;">
-      <div style="font-family:'Space Mono',monospace;font-size:1.8rem;color:var(--warn);font-weight:700">2</div>
-      <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-top:4px">⚠ Must-Charge Stops</div>
-    </div>
-    <div style="background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:20px;text-align:center;">
-      <div style="font-family:'Space Mono',monospace;font-size:1.8rem;color:var(--ok);font-weight:700">70 mi</div>
-      <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-top:4px">Arrive Home With</div>
+    <div class="store-card fred">
+      <div class="store-name">&#127839; Fred Meyer</div>
+      <div class="store-dist">~8 mi &nbsp;&middot;&nbsp; ~12 min from Airbnb</div>
+      <div class="store-info">50 2nd St S, Nampa, ID 83651<br>Daily: 7 AM&ndash;11 PM<br>&#9742; +1 208-465-2830</div>
+      <div class="card-links">
+        <a href="https://www.google.com/maps/dir/?api=1&destination=50+2nd+St+S,+Nampa,+ID+83651" target="_blank" class="lmap">&#128205; Directions</a>
+        <a href="https://www.fredmeyer.com" target="_blank" class="lweb">&#127760; fredmeyer.com</a>
+      </div>
     </div>
   </div>
+  <div style="margin-top:16px;background:rgba(0,200,117,.06);border:1px solid rgba(0,200,117,.15);border-left:4px solid var(--ok);border-radius:var(--radius);padding:14px 18px;font-size:.82rem;color:rgba(232,234,240,.7);">
+    &#128161; <strong style="color:var(--ok)">Tip:</strong> Stock up at Costco on Day 1 arrival evening &mdash; snacks, drinks &amp; breakfast items for all 3 nights. Fred Meyer is open till 11 PM daily for fresh produce &amp; last-minute needs.
+  </div>
+</div>
+</section>
 
+<!-- ═══════════════ TIPS ═══════════════ -->
+<section id="tips" class="tips-section">
+<div class="container">
+  <div class="sec-hdr">
+    <span class="sec-tag">&#128161; Planning Notes</span>
+    <h2>Tips &amp; Warnings</h2>
+  </div>
+  <div class="tips-grid">
+    <div class="tip warn"><div class="tip-icon">&#9888;&#65039;</div><div class="tip-title">US-95 Dead Zone</div><div class="tip-text">No Tesla SC between Lewiston and Meridian (81 mi). Always charge FULL at Lewiston on Day 1 &amp; Day 4.</div></div>
+    <div class="tip warn"><div class="tip-icon">&#9888;&#65039;</div><div class="tip-title">Saffron &ndash; Closed Mon &amp; Sun</div><div class="tip-text">Make sure Day 2 falls on Tue&ndash;Sat. Idaho&rsquo;s Best Winner &mdash; worth planning around!</div></div>
+    <div class="tip warn"><div class="tip-icon">&#9888;&#65039;</div><div class="tip-title">Bombay Grill &ndash; Closed Mondays</div><div class="tip-text">Lunch buffet ends 2 PM &mdash; arrive by 1:30. Dinner service 5&ndash;9 PM.</div></div>
+    <div class="tip warn"><div class="tip-icon">&#9888;&#65039;</div><div class="tip-title">Red Fort &ndash; Closed Sundays</div><div class="tip-text">Great Mon&ndash;Sat dinner. Only 8 mi from your Airbnb.</div></div>
+    <div class="tip warn"><div class="tip-icon">&#9888;&#65039;</div><div class="tip-title">Fly High &ndash; Closed Sundays</div><div class="tip-text">Mon &amp; Fri&ndash;Sat open 10 AM. Tue&ndash;Thu open from 12 PM.</div></div>
+    <div class="tip warn"><div class="tip-icon">&#9888;&#65039;</div><div class="tip-title">Mom &amp; Pop's &ndash; Closed Mondays</div><div class="tip-text">Open Tue&ndash;Sun 8 AM&ndash;3 PM. Check day of trip!</div></div>
+    <div class="tip good"><div class="tip-icon">&#9889;</div><div class="tip-title">Charge During Meals</div><div class="tip-text">Moses Lake SC is 2 min from Mom &amp; Pop's. Lewiston SC is at WinCo near Mango Tree. Twin Falls SC is 2 min from Saffron. Maximize meal time as charge time!</div></div>
+    <div class="tip good"><div class="tip-icon">&#128161;</div><div class="tip-title">Zoo $3 Thursday</div><div class="tip-text">Visit Zoo Boise on Thursday for just $3/person. Normal price $10&ndash;$14. Massive saving for the family!</div></div>
+    <div class="tip good"><div class="tip-icon">&#128161;</div><div class="tip-title">Malad Gorge $7 Pass</div><div class="tip-text">$7/car covers ALL Idaho State Parks for the day!</div></div>
+    <div class="tip info"><div class="tip-icon">&#9981;</div><div class="tip-title">Fill Gas Before US-95</div><div class="tip-text">Fill petrol in Nampa/Meridian before heading north on Day 4. Sparse stations on US-95 canyon stretch.</div></div>
+    <div class="tip info"><div class="tip-icon">&#128242;</div><div class="tip-title">Download Maps Offline</div><div class="tip-text">US-95 Idaho canyon country has spotty signal. Download Google Maps offline before leaving Bellevue.</div></div>
+    <div class="tip info"><div class="tip-icon">&#9889;</div><div class="tip-title">Boise SC = Your Home Base</div><div class="tip-text">851 N Orchard St Boise SC is only 10 mi from Airbnb. Charge here every morning before Days 2, 3 &amp; 4.</div></div>
+  </div>
 </div>
 </section>
 
 </main>
 
 <footer>
-  <strong>⚡ Tesla Supercharger Plan</strong> &nbsp;·&nbsp; Bellevue &rarr; Boise &nbsp;·&nbsp; 4-Day Family Road Trip<br>
-  <span style="margin-top:8px;display:block;opacity:0.5">Always verify supercharger availability on the Tesla app before departure. Charge estimates based on Model 3 LR / Model Y LR at 80% efficiency.</span>
+  <strong>&#9889; Bellevue &rarr; Boise</strong> &nbsp;&middot;&nbsp; Family Road Trip &nbsp;&middot;&nbsp; Tesla Edition &nbsp;&middot;&nbsp; 4 Days &middot; 25 Stops &middot; 9 SC Stops<br>
+  <span style="opacity:.45;margin-top:6px;display:block;">Airbnb: 6976 W Redwood Crk Dr, Meridian, ID 83646 &nbsp;&middot;&nbsp; Charge estimates based on Model 3 LR / Model Y LR. Verify on Tesla app before departure.</span>
 </footer>
 
 <script>
-const sections = ['day1','day2','day3','day4','directory','summary','warning'];
-const navLinks = document.querySelectorAll('.nav a');
-window.addEventListener('scroll', () => {
-  let cur = '';
-  sections.forEach(id => {
-    const el = document.getElementById(id);
-    if (el && window.scrollY >= el.offsetTop - 90) cur = id;
+const secs=['day1','day2','day3','day4','restaurants','gmaps','stores','tips'];
+const links=document.querySelectorAll('.nav a');
+window.addEventListener('scroll',()=>{
+  let cur='';
+  secs.forEach(id=>{
+    const el=document.getElementById(id);
+    if(el&&window.scrollY>=el.offsetTop-90)cur=id;
   });
-  navLinks.forEach(a => {
-    const href = a.getAttribute('href').replace('#','');
-    a.classList.toggle('active', href === cur);
+  links.forEach(a=>{
+    const h=a.getAttribute('href').replace('#','');
+    a.classList.toggle('active',h===cur);
   });
 });
 </script>
-
 </body>
 </html>
